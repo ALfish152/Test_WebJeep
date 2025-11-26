@@ -1,3 +1,4 @@
+/* Improved Typography */
 * {
     box-sizing: border-box;
 }
@@ -7,8 +8,16 @@ html, body {
     padding: 0;
     height: 100%;
     overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* Map Styles */
 #map {
     height: 100vh;
     width: 100%;
@@ -17,6 +26,7 @@ html, body {
     left: 0;
     z-index: 1;
 }
+
 .leaflet-bar > a:link {
     height: 40px;
     width: 40px;
@@ -24,12 +34,15 @@ html, body {
     color: black;
     font-size: 30px;
 }
-.leaflet-control-scale-line{
+
+.leaflet-control-scale-line {
     display: inline-flexbox;
     bottom: 10px;
     left: 10px;
     font-size: 15px;
 }
+
+/* Sidebar Styles */
 .sidebar {
     position: absolute;
     top: 10px;
@@ -50,49 +63,67 @@ html, body {
 }
 
 .sidebar-toggle {
-  display: none;
+    display: none;
 }
 
 .sidebar-toggle:checked ~ .sidebar {
-  transform: translateX(100%);
-}
-.material-symbols-outlined {
-    color: black;
-    font-size: 30px;
+    transform: translateX(100%);
 }
 
+/* Toggle Button Styles */
 .toggle-btn {
-  position: absolute;
-  top: 350px;
-  right: 400px;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  color: black;
-  border: none;
-  border-radius: 10px 0 0 10px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 1100;
-  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    position: absolute;
+    top: 20px;
+    right: 410px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: #333;
+    border: none;
+    border-radius: 10px 0 0 10px;
+    padding: 12px 8px;
+    cursor: pointer;
+    transition: right 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* CHANGED */
+    z-index: 1100;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    width: 44px;
+    height: 44px;
 }
 
 .toggle-btn:hover {
-  box-shadow: 0 4px 8px rgba(14, 17, 20, 0.64);
+    box-shadow: 0 4px 8px rgba(14, 17, 20, 0.64);
+    background-color: #f5f5f5;
+}
+
+.toggle-icon {
+    font-size: 24px;
+    /* Remove transition if it exists */
+    /* transition: transform 0.3s ease; */
 }
 
 .sidebar-toggle:checked + .toggle-btn {
-  right: 0;
-  border-radius: 10px 0 0 10px;
+    right: 10px;
+    border-radius: 10 0px 10px 0;
 }
 
-.sidebar-toggle:checked + .toggle-btn .material-symbols-outlined {
-  transform: rotate(180deg);
+/* REMOVE OR COMMENT OUT THE ROTATION */
+/*
+.sidebar-toggle:checked + .toggle-btn .toggle-icon {
+    transform: rotate(180deg);
+}
+*/
+
+/* Button Icons */
+.btn-icon {
+    font-size: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
+/* Route Items */
 .route-item {
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
     border: 1px solid #e1e5e9;
     border-radius: 8px;
@@ -115,20 +146,22 @@ html, body {
 }
 
 .route-info {
-    font-size: 0.85em;
+    font-size: 0.9em;
     color: #666;
     margin-top: 8px;
     line-height: 1.4;
 }
 
+/* Form Elements */
 .search-box {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     transition: border-color 0.3s;
+    font-family: inherit;
 }
 
 .search-box:focus {
@@ -163,6 +196,7 @@ html, body {
     cursor: pointer;
     border-bottom: 1px solid #f0f0f0;
     transition: background-color 0.2s;
+    font-family: inherit;
 }
 
 .suggestion-item:hover {
@@ -173,6 +207,7 @@ html, body {
     border-bottom: none;
 }
 
+/* Loading Indicator */
 .loading {
     display: none;
     text-align: center;
@@ -184,16 +219,9 @@ html, body {
     font-weight: 500;
 }
 
-.route-controls {
-    margin: 20px 0;
-    padding: 15px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e1e5e9;
-}
-
+/* Control Buttons */
 .control-btn {
-    padding: 10px 16px;
+    padding: 12px 16px;
     margin: 5px;
     border: none;
     border-radius: 6px;
@@ -203,6 +231,11 @@ html, body {
     font-size: 14px;
     font-weight: 500;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-family: inherit;
 }
 
 .control-btn:hover {
@@ -235,6 +268,7 @@ html, body {
     background: #f57c00;
 }
 
+/* Route Details */
 .route-details {
     margin-top: 10px;
     padding: 15px;
@@ -244,39 +278,7 @@ html, body {
     border-left: 4px solid #4caf50;
 }
 
-.eta-info {
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
-    padding: 15px;
-    margin: 15px 0;
-    border-radius: 6px;
-}
-
-.traffic-indicator {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-
-.traffic-low { background-color: #28a745; }
-.traffic-medium { background-color: #ffc107; }
-.traffic-high { background-color: #dc3545; }
-
-.time-slider {
-    width: 100%;
-    margin: 10px 0;
-}
-
-.time-display {
-    text-align: center;
-    font-weight: bold;
-    color: #2196f3;
-    font-size: 1.1em;
-    margin: 5px 0;
-}
-
+/* Section Titles */
 .section-title {
     font-size: 1.1em;
     margin: 15px 0 10px 0;
@@ -285,6 +287,7 @@ html, body {
     padding-bottom: 8px;
 }
 
+/* Route Planner */
 .route-planner {
     margin: 20px 0;
     padding: 20px;
@@ -293,21 +296,16 @@ html, body {
     border: 1px solid #cce7ff;
 }
 
-/* Student/PWD discount toggle style */
-.discount-toggle input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-}
-
+/* Location Buttons */
 .location-buttons {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 10px;
 }
 
 .location-btn {
-    flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -315,50 +313,16 @@ html, body {
     color: #1976d2;
     font-size: 14px;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    font-family: inherit;
 }
 
 .location-btn:hover {
     background: #bbdefb;
 }
 
-.favorites {
-    margin: 20px 0;
-    padding: 15px;
-    background: #fff8e1;
-    border-radius: 8px;
-    border: 1px solid #ffeaa7;
-}
-
-.statistics {
-    margin: 20px 0;
-    padding: 15px;
-    background: #fff3e0;
-    border-radius: 8px;
-    border: 1px solid #ffcc80;
-}
-
-.favorite-item {
-    padding: 10px;
-    margin: 5px 0;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 1px solid #ffeaa7;
-    transition: all 0.2s;
-}
-
-.favorite-item:hover {
-    background: #fff8e1;
-}
-
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    margin: 8px 0;
-    padding: 5px 0;
-    border-bottom: 1px dashed #eee;
-}
-
+/* Route Options */
 .route-options {
     margin-top: 15px;
     padding: 15px;
@@ -382,200 +346,27 @@ html, body {
     border-color: #4dabf7;
 }
 
-.transfer-option {
-    padding: 15px;
-    margin: 10px 0;
-    background: #fff3e0;
-    border-radius: 8px;
-    border: 2px solid #ffb74d;
-    border-left: 6px solid #ff9800;
+/* Thinner Route Lines */
+.leaflet-interactive {
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.journey-leg {
-    padding: 10px;
-    margin: 8px 0;
-    background: white;
-    border-radius: 6px;
-    border-left: 4px solid #4caf50;
+/* Make route lines thinner for better arrow visibility */
+.route-line {
+    weight: 3; /* Reduced from 6 */
+    opacity: 0.8;
+    line-cap: round;
+    line-join: round;
 }
 
-.transfer-point {
-    padding: 8px;
-    margin: 5px 0;
-    background: #e3f2fd;
-    border-radius: 4px;
-    border-left: 3px solid #2196f3;
-    font-weight: bold;
+/* Direction markers */
+.direction-marker {
+    pointer-events: none;
+    z-index: 650;
 }
 
-.confidence-bar {
-    height: 6px;
-    background: #e9ecef;
-    border-radius: 3px;
-    margin: 5px 0;
-    overflow: hidden;
-}
-
-.confidence-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.5s;
-}
-
-.high-confidence { background: #28a745; }
-.medium-confidence { background: #ffc107; }
-.low-confidence { background: #dc3545; }
-
-.route-type-badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.7em;
-    font-weight: bold;
-    margin-left: 5px;
-}
-
-.type-main { background: #ffebee; color: #c62828; }
-.type-secondary { background: #e8f5e8; color: #2e7d32; }
-.type-feeder { background: #e3f2fd; color: #1565c0; }
-.type-special { background: #f3e5f5; color: #7b1fa2; }
-
-.stop-list {
-    margin-top: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-    background: white;
-    border-radius: 6px;
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-.stop-item {
-    padding: 8px 5px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 0.85em;
-}
-
-.stop-item:last-child {
-    border-bottom: none;
-}
-
-.transfer-icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: #ff9800;
-    color: white;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 20px;
-    margin-right: 8px;
-    font-size: 12px;
-}
-
-.current-location-marker {
-    font-size: 24px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
-    z-index: 1000;
-}
-
-/* Accuracy circle colors */
-.high-accuracy-circle {
-    stroke: #00C851;
-    fill: #00C851;
-}
-
-.medium-accuracy-circle {
-    stroke: #ffbb33;
-    fill: #ffbb33;
-}
-
-.low-accuracy-circle {
-    stroke: #ff4444;
-    fill: #ff4444;
-}
-
-.multi-route-indicator {
-    background: #ff9800;
-    color: white;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.7em;
-    margin-left: 8px;
-}
-
-/* Enhanced Features Styles */
-.jeepney-marker {
-    font-size: 16px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-}
-
-.route-comparison {
-    background: #fff3cd;
-    border-radius: 8px;
-    padding: 15px;
-    margin: 10px 0;
-    border-left: 4px solid #ffc107;
-}
-
-.comparison-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px;
-    border-bottom: 1px solid #ffeaa7;
-}
-
-.comparison-item:last-child {
-    border-bottom: none;
-}
-
-.fare-breakdown {
-    background: #e8f5e8;
-    border-radius: 6px;
-    padding: 10px;
-    margin: 5px 0;
-    border-left: 3px solid #4caf50;
-}
-
-.transfer-highlight {
-    background: #fff3e0;
-    border-left: 4px solid #ff9800;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 4px;
-}
-
-.popular-routes {
-    margin: 15px 0;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-
-.popular-route {
-    padding: 10px;
-    margin: 5px 0;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 1px solid #dee2e6;
-    transition: all 0.2s;
-}
-
-.popular-route:hover {
-    background: #e3f2fd;
-    border-color: #2196f3;
-}
-
-.simulation-controls {
-    margin: 15px 0;
-    padding: 15px;
-    background: #e8f5e8;
-    border-radius: 8px;
-    border: 1px solid #c8e6c9;
-}
-
+/* Transfer Route Styles */
 .transfer-route {
     background: #fff3e0;
     border-radius: 8px;
@@ -584,7 +375,7 @@ html, body {
     border: 2px dashed #ffb74d;
 }
 
-.route-leg {  
+.route-leg {
     margin: 8px 0;
     background: white;
     border-radius: 6px;
@@ -592,41 +383,34 @@ html, body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     font-size: 14px;
     color: black;
-    line-height: 1;
+    line-height: 1.4;
     padding: 12px;
-  
-
 }
 
 .route-step {
-  position: relative;
-  padding: 5px 0;
+    position: relative;
+    padding: 5px 0;
 }
 
 .arrow {
-  margin-right: 7px;
-  color: black;
-  font-size: 20px;
-  font-weight: bold;
-  flex-shrink: 0;
+    margin-right: 7px;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    flex-shrink: 0;
 }
 
-.leg-walk {
-    margin-left: 3px;
-}
-
-.leg-jeep {
+.leg-walk, .leg-jeep {
     margin-left: 3px;
 }
 
 .transfer .step-content {
-  background-color: #f7e1a1;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  display: inline-block;
+    background-color: #f7e1a1;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    display: inline-block;
 }
-
 
 .transfer-point {
     padding: 10px;
@@ -639,7 +423,7 @@ html, body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* New styles for nearest routes and walking routes */
+/* Nearest Routes */
 .nearest-routes-list {
     margin-top: 10px;
 }
@@ -668,387 +452,13 @@ html, body {
     font-weight: bold;
 }
 
-.recommendation {
-    font-size: 0.9em;
-    line-height: 1.4;
-}
-
-.walking-route-info {
-    background: #e8f5e8;
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #4caf50;
-}
-
-.walking-marker {
-    font-size: 20px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
-}
-
-.jeepney-marker {
-    font-size: 20px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
-}
-
-/* Search radius circle animation */
-@keyframes pulse {
-    0% { opacity: 0.1; }
-    50% { opacity: 0.3; }
-    100% { opacity: 0.1; }
-}
-
-.search-radius-circle {
-    animation: pulse 2s infinite;
-}
-
-/* Enhanced Boarding Validation Styles */
-.boarding-info {
-    padding: 5px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-.boarding-info.primary {
-    background: #e8f5e8;
-    color: #2e7d32;
-    border-left: 3px solid #4caf50;
-}
-
-.boarding-info.secondary {
-    background: #e3f2fd;
-    color: #1565c0;
-    border-left: 3px solid #2196f3;
-}
-
-.boarding-info.walking {
-    background: #fff3e0;
-    color: #ef6c00;
-    border-left: 3px solid #ff9800;
-}
-
-.boarding-info.invalid {
-    background: #ffebee;
-    color: #c62828;
-    border-left: 3px solid #f44336;
-}
-
-.boarding-info.unknown {
-    background: #f5f5f5;
-    color: #616161;
-    border-left: 3px solid #9e9e9e;
-}
-
-.boarding-details {
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin: 10px 0;
-    font-size: 0.9em;
-}
-
-.boarding-details.primary {
-    background: #e8f5e8;
-    border: 1px solid #c8e6c9;
-}
-
-.boarding-details.secondary {
-    background: #e3f2fd;
-    border: 1px solid #bbdefb;
-}
-
-.boarding-details.walking {
-    background: #fff3e0;
-    border: 1px solid #ffe0b2;
-}
-
-.boarding-details.invalid {
-    background: #ffebee;
-    border: 1px solid #ffcdd2;
-}
-
-.boarding-warning-note {
-    background: #fff3cd;
-    color: #856404;
-    padding: 5px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    margin: 5px 0;
-    border-left: 3px solid #ffc107;
-}
-
-.boarding-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.8em;
-    font-weight: bold;
-    margin: 5px 0;
-    display: inline-block;
-}
-
-.boarding-badge.boarding-valid {
-    background: #e8f5e8;
-    color: #2e7d32;
-    border: 1px solid #c8e6c9;
-}
-
-.boarding-badge.boarding-warning {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
-}
-
-.boarding-badge.boarding-invalid {
-    background: #ffebee;
-    color: #c62828;
-    border: 1px solid #ffcdd2;
-}
-
-.validated-route {
-    border-left: 4px solid #4caf50 !important;
-}
-
-.nearest-route-item.boarding-warning {
-    border: 2px solid #ffc107;
-    background: #fffdf6;
-}
-
-.no-routes-found {
-    background: #fff3f3;
-    border: 2px solid #ffcdd2;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-}
-
-.no-routes-found ul {
-    text-align: left;
-    margin: 15px 0;
-}
-
-.no-routes-found li {
-    margin: 8px 0;
-    color: #666;
-}
-
-/* Enhanced Accessibility Styles */
-.accessibility-info {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    margin-top: 5px;
-    font-weight: bold;
-    border-left: 3px solid;
-}
-
-.accessibility-info.direct {
-    background: #e8f5e8;
-    color: #2e7d32;
-    border-color: #4caf50;
-}
-
-.accessibility-info.available {
-    background: #e3f2fd;
-    color: #1565c0;
-    border-color: #2196f3;
-}
-
-.accessibility-info.walking {
-    background: #fff3e0;
-    color: #ef6c00;
-    border-color: #ff9800;
-}
-
-.accessibility-info.location_based {
-    background: #f3e5f5;
-    color: #7b1fa2;
-    border-color: #9c27b0;
-}
-
-/* Enhanced Route Planning Styles */
-.error-message {
-    background: #ffebee;
-    border: 2px solid #f44336;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-}
-
-.error-message h5 {
-    color: #c62828;
-    margin-top: 0;
-}
-
-.suggestion-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 15px;
-}
-
-.no-routes-found {
-    background: #fff3e0;
-    border: 2px solid #ffb74d;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-}
-
-.no-routes-found h5 {
-    color: #ef6c00;
-    margin-top: 0;
-}
-
-.no-routes-found ul {
-    text-align: left;
-    margin: 15px 0;
-}
-
-.no-routes-found li {
-    margin: 8px 0;
-    color: #666;
-}
-
-.route-item {
-    transition: all 0.3s ease;
-}
-
-.route-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Enhanced Landmark Markers */
-.primary-landmark-marker {
-    font-size: 35px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-    filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.8));
-    z-index: 1000;
-}
-
-.secondary-landmark-marker {
-    font-size: 25px;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    filter: drop-shadow(0 0 4px rgba(52, 152, 219, 0.6));
-    opacity: 0.8;
-    z-index: 500;
-}
-
-/* Popup styling enhancements */
-.leaflet-popup-content {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.leaflet-popup-content b {
-    color: #2c3e50;
-}
-
-/* Custom Destination Marker */
-.custom-destination-marker {
-    font-size: 30px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
-    z-index: 1000;
-}
-
-/* Route Direction Arrows */
-.route-direction-arrow {
-    font-size: 16px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
-}
-
-/* Direction marker emoji placed along polylines */
-.direction-marker {
-    font-size: 20px;
-    line-height: 1;
-    pointer-events: none; /* don't block map interactions */
-    z-index: 650; /* above most map layers */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-    filter: drop-shadow(0 0 4px rgba(0,0,0,0.45));
-}
-
-/* Optimized Route Note */
-.optimized-note {
-    background: #e3f2fd;
-    padding: 8px;
-    border-radius: 4px;
-    margin-top: 8px;
-    border-left: 3px solid #2196f3;
-    font-size: 0.9em;
-}
-
-/* Make optimized routes more visible */
-.leaflet-interactive {
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-
-/* Transfer Point Styles */
-.transfer-point-marker {
-    font-size: 30px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-    filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.8));
-    z-index: 1000;
-}
-
-.transfer-point {
-    background: #fff3e0;
-    border: 2px solid #ffb74d;
-    border-radius: 8px;
-    padding: 15px;
-    margin: 10px 0;
-    border-left: 6px solid #ff9800;
-}
-
-.journey-leg {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    margin: 10px 0;
-    border-left: 4px solid #4caf50;
-}
-
-.transfer-details {
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 12px;
-    margin: 10px 0;
-    border-left: 3px solid #17a2b8;
-}
-
-.transfer-stop {
-    padding: 8px;
-    margin: 5px 0;
-    background: white;
-    border-radius: 4px;
-    border-left: 3px solid #ffc107;
-}
-
-.fare-breakdown {
-    background: #e8f5e8;
-    border-radius: 6px;
-    padding: 12px;
-    margin: 10px 0;
-    border-left: 3px solid #4caf50;
-}
-
-.leg-transfer {
-    background: #fff3cd;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: bold;
-    color: #856404;
-}
-
-/*phone*/
+/* Responsive Design */
+/* Phone */
+/* Phone */
+/* Phone */
 @media (max-width: 768px) {
     body {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     #map {
@@ -1090,49 +500,69 @@ html, body {
         transform: translateY(0);
     }
 
+    /* Alternative: Floating action button style */
     .toggle-btn {
         position: fixed;
-        bottom: -25px;
-        top: auto;
-        left: 180px;
-        right: 0;
-        margin: 0 auto;
-        background: white;
+        bottom: 20px; /* Floating above content */
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2196f3;
         color: white;
-        border-radius: 10px 0 0 10px;
-        width: 50px;
-        height: 100px;
+        border-radius: 50px;
+        width: 140px;
+        height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 20px rgba(33, 150, 243, 0.4);
         z-index: 1001;
-        transform: translateY(100%);
         border: none;
         cursor: pointer;
-        rotate: calc(90deg);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+        background: #1976d2;
+        transform: translateX(-50%) scale(1.05);
+    }
+
+    .toggle-icon {
+        font-size: 24px;
+        margin-right: 8px;
+    }
+
+    .toggle-btn::after {
+        content: "Show Routes";
+        font-size: 14px;
+        font-weight: 600;
     }
 
     .sidebar.expanded + .toggle-btn {
-        transform: translateY(100%);
-        bottom: 85vh;
+        bottom: 20px;
+        background: #dc3545;
     }
 
     .sidebar-toggle:checked + .toggle-btn {
-        bottom: 45vh;
-        top: auto;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        transform: translateY(0);
-        border-radius: 10px 0 0 10px;
+        bottom: 20px;
+        transform: translateX(-50%);
+        background: #dc3545;
     }
 
-    .sidebar-toggle:checked + .toggle-btn .material-symbols-outlined {
-    transform: rotate(180deg);
+    .sidebar-toggle:checked + .toggle-btn:hover {
+        background: #c82333;
     }
 
+    .sidebar-toggle:checked + .toggle-btn::after {
+        content: "Hide Routes";
+    }
+
+    /* REMOVE OR COMMENT OUT THIS ROTATION FOR MOBILE */
+    /*
+    .sidebar-toggle:checked + .toggle-btn .toggle-icon {
+        transform: rotate(180deg);
+    }
+    */
 
     .search-box {
         padding: 12px;
@@ -1174,6 +604,14 @@ html, body {
     .sidebar {
         width: 350px;
     }
+    
+    .toggle-btn {
+        right: 360px; /* Adjusted for tablet sidebar width */
+    }
+    
+    .sidebar-toggle:checked + .toggle-btn {
+        right: 10px;
+    }
 }
 
 /* Landscape */
@@ -1187,8 +625,8 @@ html, body {
         bottom: 100px;
     }
 
-    .toggle-btn{
-        bottom: 5000px;
+    .toggle-btn {
+        bottom: 60vh;
     }
     
     .sidebar.expanded {
@@ -1210,3 +648,563 @@ html, body {
     z-index: 1000;
 }
 
+/* Move route details above available routes */
+#route-details {
+    order: 1;
+    margin-bottom: 20px;
+}
+
+#routes-list {
+    order: 2;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Clean transfer route styling */
+.transfer-route-clean {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    border-left: 4px solid #ff9800;
+}
+
+.transfer-leg {
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 6px;
+    border-left: 3px solid #4caf50;
+}
+
+.transfer-point-clean {
+    padding: 10px;
+    margin: 10px 0;
+    background: #fff3e0;
+    border-radius: 6px;
+    border-left: 4px solid #ff9800;
+    text-align: center;
+    font-weight: bold;
+}
+
+.fare-breakdown-clean {
+    background: #e8f5e8;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 10px 0;
+    border-left: 3px solid #4caf50;
+}
+
+/* Clean route option styling */
+.route-option-clean {
+    padding: 12px;
+    margin: 8px 0;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #b3e0ff;
+    transition: all 0.2s;
+}
+
+.route-option-clean:hover {
+    background: #f0f9ff;
+    border-color: #4dabf7;
+}
+
+.route-leg-clean {
+    margin: 8px 0;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #4caf50;
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 10px;
+}
+
+.route-step-clean {
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 13px;
+}
+
+.arrow-clean {
+    margin-right: 8px;
+    color: #666;
+    font-weight: bold;
+}
+
+.step-type {
+    display: inline-block;
+    width: 80px;
+    font-weight: 600;
+    color: #333;
+}
+
+.step-detail {
+    color: #666;
+}
+
+.confidence-badge-clean {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: 8px;
+}
+
+.confidence-high { background: #28a745; }
+.confidence-medium { background: #ffc107; }
+.confidence-low { background: #dc3545; }
+
+/* Remove emojis from route options */
+.route-summary-clean {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Enhanced Landmark Markers - Bigger sizes */
+.primary-landmark-marker {
+    font-size: 45px; /* Increased from 35px */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.8));
+    z-index: 1000;
+}
+
+.secondary-landmark-marker {
+    font-size: 35px; /* Increased from 25px */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    filter: drop-shadow(0 0 4px rgba(52, 152, 219, 0.6));
+    opacity: 0.8;
+    z-index: 500;
+}
+
+.transfer-point-marker {
+    font-size: 40px; /* Increased from 30px */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.8));
+    z-index: 1000;
+}
+
+.custom-destination-marker {
+    font-size: 40px; /* Increased from 30px */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+    z-index: 1000;
+}
+
+/* Consistent button styling */
+.control-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.control-btn.success {
+    background: #28a745;
+    color: white;
+}
+
+.control-btn.success:hover {
+    background: #218838;
+}
+
+.control-btn.secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.control-btn.secondary:hover {
+    background: #5a6268;
+}
+
+/* Button container for side-by-side layout */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.button-group .control-btn {
+    flex: 1;
+}
+
+/* Ensure route details appears above available routes */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+#route-details {
+    order: 1;
+    margin-bottom: 20px;
+}
+
+#routes-list {
+    order: 2;
+}
+
+.section-title {
+    order: 3;
+}
+
+/* Remove clear routes button from route details */
+.route-details .control-btn[style*="background: #dc3545"] {
+    display: none;
+}
+
+/* Consistent star marker sizing */
+.primary-landmark-marker {
+    font-size: 45px !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7) !important;
+    filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.8)) !important;
+    z-index: 1000 !important;
+}
+
+/* Ensure proper sidebar layout */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.available-routes-section {
+    order: 3;
+    margin-top: 20px;
+}
+
+#route-details {
+    order: 2;
+}
+
+.route-planner {
+    order: 1;
+}
+
+.loading {
+    order: 1.5;
+}
+
+/* Button styling consistency */
+.location-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-size: 14px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+}
+
+.location-btn:hover {
+    background: #bbdefb;
+}
+
+.location-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    font-size: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+/* Fix Available Routes layout */
+.available-routes-container {
+    margin-top: auto; /* Push to bottom */
+    padding-top: 20px;
+    border-top: 1px solid #e1e5e9;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.route-planner {
+    flex-shrink: 0;
+}
+
+#route-details {
+    flex-shrink: 0;
+}
+
+.loading {
+    flex-shrink: 0;
+}
+
+#routes-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Custom marker styles */
+.custom-start-marker {
+    font-size: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.8));
+    z-index: 1000;
+}
+
+.custom-destination-marker {
+    font-size: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+    z-index: 1000;
+}
+
+/* Button states */
+.location-btn.active {
+    background: #ff9800;
+    color: white;
+    font-weight: bold;
+}
+
+.location-btn.active:hover {
+    background: #f57c00;
+}
+
+/* Fix sidebar layout order */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.route-planner {
+    order: 1;
+    flex-shrink: 0;
+}
+
+.loading {
+    order: 2;
+    flex-shrink: 0;
+}
+
+#route-details {
+    order: 3;
+    flex-shrink: 0;
+}
+
+.available-routes-container {
+    order: 4;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e5e9;
+}
+
+#routes-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Custom marker styles */
+.custom-start-marker {
+    font-size: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.8));
+    z-index: 1000;
+}
+
+.custom-destination-marker {
+    font-size: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+    z-index: 1000;
+}
+
+/* Location button styling */
+.location-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-size: 14px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+.location-btn:hover {
+    background: #bbdefb;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+}
+
+.location-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.location-btn:disabled:hover {
+    background: #e3f2fd;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-icon {
+    font-size: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+/* Current location marker styling */
+.current-location-marker {
+    font-size: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 8px rgba(33, 150, 243, 0.8));
+    z-index: 1000;
+}
+
+/* Improved Sidebar Styles */
+.sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    max-height: 95vh;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    /* Add top padding to match bottom */
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Reduce space between title and route planner */
+.sidebar h3 {
+    margin-top: 0;
+    margin-bottom: 15px; /* Reduced from default */
+    color: #2c3e50;
+}
+
+/* Reduce space between route planner and available routes */
+.route-planner {
+    margin: 0 0 15px 0; /* Reduced from 20px 0 */
+    padding: 15px; /* Slightly reduced padding */
+    background: #f0f8ff;
+    border-radius: 8px;
+    border: 1px solid #cce7ff;
+}
+
+/* Reduce space between sections */
+.section-title {
+    font-size: 1.1em;
+    margin: 10px 0 8px 0; /* Reduced margins */
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 6px; /* Reduced padding */
+}
+
+/* Adjust available routes container */
+.available-routes-container {
+    margin-top: 15px; /* Reduced from 20px */
+    padding-top: 15px; /* Reduced from 20px */
+    border-top: 1px solid #e1e5e9;
+}
+
+/* Fix scrollbar positioning */
+#routes-list {
+    max-height: 300px;
+    overflow-y: auto;
+    /* Remove extra right padding */
+    padding-right: 5px;
+    margin-right: -5px; /* Pull content slightly to the right */
+}
+
+/* Custom scrollbar styling to use more space */
+#routes-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#routes-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#routes-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+#routes-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Reduce space in route items */
+.route-item {
+    padding: 10px; /* Reduced from 12px */
+    margin: 8px 0; /* Reduced from 10px 0 */
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Adjust route info spacing */
+.route-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 6px; /* Reduced from 8px */
+    line-height: 1.4;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        padding: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    
+    .route-planner {
+        margin-bottom: 10px;
+        padding: 12px;
+    }
+    
+    .available-routes-container {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+}

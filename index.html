@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Batangas City Jeepney Routes with ETA</title>
+    <title>Batangas City Jeepney Routes</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
@@ -14,57 +14,81 @@
     
     <input type="checkbox" id="sidebarToggle" class="sidebar-toggle" />
     <label for="sidebarToggle" class="toggle-btn">
-  <span class="material-symbols-outlined">chevron_right</span>
-</label>
+        <span class="material-symbols-outlined toggle-icon">menu</span>
+    </label>
 
     <div class="sidebar" id="sidebar">  
-        <h3 style="margin-top: 0; color: #2c3e50;">🚙 Batangas City Jeepney Routes</h3>
+        <h3 style="margin-top: 0; color: #2c3e50;">Batangas City Jeepney Routes</h3>
         
-            <div class="route-planner">
-    <h4 class="section-title">📍 Jeepney Route Planner</h4>
-    
-    <div class="location-buttons">
-        <button class="location-btn" onclick="app.useMyLocationWithRoutes('start', event)">📍 Use My Location (Start)</button>
-        <button class="location-btn" onclick="app.useMyLocationNoRoutes('end', event)">📍 Use My Location (End)</button>
-        <button class="location-btn" id="mapClickToggle" onclick="app.toggleMapClick()">🗺️ Set Destination by Map Click</button>
-    </div>
-    
-    <div class="input-with-suggestions">
-        <input type="text" id="startLocation" placeholder="Start location" class="search-box" style="margin-bottom: 5px;">
-        <div class="suggestions-list" id="startSuggestions"></div>
-    </div>
-    
-    <div class="input-with-suggestions">
-        <input type="text" id="endLocation" placeholder="Destination" class="search-box" style="margin-bottom: 10px;">
-        <div class="suggestions-list" id="endSuggestions"></div>
-    </div>
-    
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-        <label class="discount-toggle" style="font-size:0.95em; display:flex; align-items:center; gap:8px;">
-            <input type="checkbox" id="discountToggle"> Student / PWD (20% off)
-        </label>
-    </div>
-
-    <button class="control-btn success" onclick="routePlanner.planRoute()">Find Jeepney Route</button>
-    <button class="control-btn secondary" onclick="routeManager.showAllRoutes()">Show All Routes</button>
-    <button class="control-btn secondary" onclick="clearInputsAndRoutes()">🗑️ Clear All</button>
-    <div id="route-options" class="route-options"></div>
-</div>
+        <!-- Jeepney Route Planner Section - FIRST -->
+        <div class="route-planner">
+            <h4 class="section-title">Jeepney Route Planner</h4>
             
+            <div class="location-buttons">
+                <button class="location-btn" onclick="app.useMyLocationWithRoutes('start', event)">
+                    <span class="material-symbols-outlined btn-icon">my_location</span>
+                    Use My Location (Start)
+                </button>
+                <button class="location-btn" onclick="app.useMyLocationNoRoutes('end', event)">
+                    <span class="material-symbols-outlined btn-icon">my_location</span>
+                    Use My Location (End)
+                </button>
+                <button class="location-btn" id="startMapClickToggle" onclick="app.toggleMapClick('start')">
+                    <span class="material-symbols-outlined btn-icon">place</span>
+                    Set Start by Map Click
+                </button>
+                <button class="location-btn" id="endMapClickToggle" onclick="app.toggleMapClick('end')">
+                    <span class="material-symbols-outlined btn-icon">place</span>
+                    Set Destination by Map Click
+                </button>
+            </div>
+            
+            <div class="input-with-suggestions">
+                <input type="text" id="startLocation" placeholder="Start location" class="search-box" style="margin-bottom: 5px;">
+                <div class="suggestions-list" id="startSuggestions"></div>
+            </div>
+            
+            <div class="input-with-suggestions">
+                <input type="text" id="endLocation" placeholder="Destination" class="search-box" style="margin-bottom: 10px;">
+                <div class="suggestions-list" id="endSuggestions"></div>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <label class="discount-toggle" style="font-size:0.95em; display:flex; align-items:center; gap:8px;">
+                    <input type="checkbox" id="discountToggle"> Student / PWD (20% off)
+                </label>
+            </div>
+
+            <button class="control-btn success" onclick="routePlanner.planRoute()">
+                <span class="material-symbols-outlined btn-icon">directions</span>
+                Find Jeepney Route
+            </button>
+            <button class="control-btn secondary" onclick="routeManager.showAllRoutes()">
+                <span class="material-symbols-outlined btn-icon">map</span>
+                Show All Routes
+            </button>
+            <button class="control-btn secondary" onclick="clearInputsAndRoutes()">
+                <span class="material-symbols-outlined btn-icon">delete</span>
+                Clear All
+            </button>
+            <div id="route-options" class="route-options"></div>
+        </div>
         
-        <div class="loading" id="loading">Calculating route and ETA... 🗺️</div>
+        <div class="loading" id="loading">Calculating route...</div>
         
-        <h4 class="section-title">🚍 Available Routes</h4>
-        <div id="routes-list"></div>
-        
+        <!-- Route details will appear here when a route is selected -->
         <div id="route-details" class="route-details" style="display: none;"></div>
-        
+
+        <!-- Available Routes Section - SECOND -->
+        <div class="available-routes-container">
+            <h4 class="section-title">Available Routes</h4>
+            <div id="routes-list"></div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script src="data.js"></script>
     <script src="app.js"></script>
-
 </body>
 </html>

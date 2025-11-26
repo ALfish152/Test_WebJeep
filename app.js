@@ -21,6 +21,12 @@ class BatangasJeepneySystem {
         this.mapClickEnabled = false; // ADD THIS
         this.customDestinationMarker = null; // ADD THIS
 
+        this.mapClickField = null; // Track which field we're setting (start/end)
+        this.customStartMarker = null; // Permanent start location marker
+        this.customDestinationMarker = null; // Permanent destination marker
+        this.tempStartMarker = null; // Temporary start marker (before confirmation)
+        this.tempDestinationMarker = null; // Temporary destination marker (before confirmation)
+
         this.init();
     }
 
@@ -300,6 +306,7 @@ initializeMap() {
 }
 
 // ENHANCED: Show landmarks with priority for start and destination
+// ENHANCED: Show landmarks with priority for start and destination
 showLandmarksForRoutes(routeNames, startLocation = null, endLocation = null) {
     try {
         // Clear all existing landmarks
@@ -337,20 +344,25 @@ showLandmarksForRoutes(routeNames, startLocation = null, endLocation = null) {
             }
         });
         
-        // Identify start and destination landmarks
-        if (startLocation && !startLocation.includes('My Location')) {
+        // ALWAYS identify start and destination landmarks
+        if (startLocation) {
             const matchedStart = this.matchLocationWithLandmarks(startLocation);
-            if (matchedStart && connectedLandmarks.has(matchedStart)) {
+            if (matchedStart) {
                 primaryLandmarks.add(matchedStart);
                 connectedLandmarks.delete(matchedStart); // Remove from secondary
+            } else if (startLocation.includes('My Location') && this.userLocation) {
+                // For "My Location", create a custom start marker
+                this.createCustomStartMarker();
             }
         }
         
-        if (endLocation && !endLocation.includes('My Location')) {
+        if (endLocation) {
             const matchedEnd = this.matchLocationWithLandmarks(endLocation);
-            if (matchedEnd && connectedLandmarks.has(matchedEnd)) {
+            if (matchedEnd) {
                 primaryLandmarks.add(matchedEnd);
                 connectedLandmarks.delete(matchedEnd); // Remove from secondary
+            } else if (endLocation.includes('Custom Destination') && this.customDestinationMarker) {
+                // Custom destination is already handled
             }
         }
         
@@ -361,16 +373,14 @@ showLandmarksForRoutes(routeNames, startLocation = null, endLocation = null) {
                     icon: L.divIcon({
                         className: 'primary-landmark-marker',
                         html: '⭐',
-                        iconSize: [35, 35],
-                        iconAnchor: [17, 35]
+                        iconSize: [45, 45],
+                        iconAnchor: [22, 45]
                     })
                 })
                 .bindPopup(`
                     <div style="text-align: center;">
                         <b style="color: #e74c3c; font-size: 1.1em;">${landmark}</b><br>
-                        <em>⭐ Journey ${primaryLandmarks.size > 1 ? 
-                            (Array.from(primaryLandmarks)[0] === landmark ? 'Start' : 'Destination') : 
-                            'Point'}</em><br>
+                        <em>⭐ ${Array.from(primaryLandmarks).indexOf(landmark) === 0 ? 'Start' : 'Destination'} Point</em><br>
                         <small>Connected to: ${Array.from(routeNames).join(', ')}</small>
                     </div>
                 `)
@@ -385,8 +395,8 @@ showLandmarksForRoutes(routeNames, startLocation = null, endLocation = null) {
                     icon: L.divIcon({
                         className: 'secondary-landmark-marker',
                         html: '📍',
-                        iconSize: [25, 25],
-                        iconAnchor: [12, 25]
+                        iconSize: [35, 35],
+                        iconAnchor: [17, 35]
                     })
                 })
                 .bindPopup(`
@@ -404,6 +414,92 @@ showLandmarksForRoutes(routeNames, startLocation = null, endLocation = null) {
         
     } catch (error) {
         console.error('Error showing landmarks:', error);
+    }
+}
+
+// FIXED: Reset map click buttons to normal state
+resetMapClickButtons() {
+    const startButton = document.getElementById('startMapClickToggle');
+    const endButton = document.getElementById('endMapClickToggle');
+    
+    startButton.innerHTML = '<span class="material-symbols-outlined btn-icon">place</span> Set Start by Map Click';
+    startButton.style.background = '#e3f2fd';
+    startButton.disabled = false;
+    
+    endButton.innerHTML = '<span class="material-symbols-outlined btn-icon">place</span> Set Destination by Map Click';
+    endButton.style.background = '#e3f2fd';
+    endButton.disabled = false;
+    
+    this.mapClickEnabled = false;
+    this.mapClickField = null;
+}
+
+// NEW: Use custom destination for both start and end (closes popup)
+useCustomDestination(field) {
+    let marker;
+    if (field === 'start') {
+        marker = this.customStartMarker;
+    } else {
+        marker = this.customDestinationMarker;
+    }
+    
+    if (!marker) {
+        this.showNotification(`No custom ${field} set. Click on the map first.`, 'error');
+        return;
+    }
+
+    const latlng = marker.getLatLng();
+    const inputField = field === 'start' ? 'startLocation' : 'endLocation';
+    document.getElementById(inputField).value = `Custom ${field === 'start' ? 'Start' : 'Destination'} (${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)})`;
+    
+    // Close the popup
+    marker.closePopup();
+    
+    // Disable map click mode but keep markers
+    this.resetMapClickButtons();
+    
+    this.showNotification(`✅ Custom ${field} set! Now click "Find Jeepney Route"`, 'success');
+}
+
+// FIXED: Clear all custom markers (including temporary ones)
+clearAllCustomMarkers() {
+    // Clear temporary markers
+    this.clearUnconfirmedMarkers();
+    
+    // Clear permanent markers
+    if (this.customStartMarker) {
+        this.map.removeLayer(this.customStartMarker);
+        this.customStartMarker = null;
+    }
+    if (this.customDestinationMarker) {
+        this.map.removeLayer(this.customDestinationMarker);
+        this.customDestinationMarker = null;
+    }
+}
+
+
+// Helper method to create custom start marker for "My Location"
+createCustomStartMarker() {
+    if (this.userLocation && this.currentLocationMarker) {
+        // Remove the existing location marker
+        this.map.removeLayer(this.currentLocationMarker);
+        
+        // Create a star marker for start location
+        this.currentLocationMarker = L.marker(this.userLocation, {
+            icon: L.divIcon({
+                className: 'primary-landmark-marker',
+                html: '⭐',
+                iconSize: [45, 45],
+                iconAnchor: [22, 45]
+            })
+        })
+        .addTo(this.map)
+        .bindPopup(`
+            <b>⭐ Start Location</b><br>
+            <em>Your Current Position</em><br>
+            Coordinates: ${this.userLocation[0].toFixed(6)}, ${this.userLocation[1].toFixed(6)}
+        `)
+        .openPopup();
     }
 }
 
@@ -476,46 +572,93 @@ matchLocationWithLandmarks(locationInput) {
             }
         });
 
-        // Student / PWD discount toggle
-        const discountToggle = document.getElementById('discountToggle');
-        if (discountToggle) {
-            discountToggle.addEventListener('change', () => {
-                this.populateRoutesList();
-                try {
-                    if (routeManager.activeRoutes.length > 0) {
-                        const active = routeManager.activeRoutes[0];
-                        const data = routeManager.routeLayers[active]?.data || jeepneyRoutes[active];
-                        if (data) {
-                            const hour = parseInt(document.getElementById('timeSlider').value);
-                            routeManager.updateRouteDetails(active, data, {}, hour);
-                        }
-                    }
-                } catch (err) {
-                    console.warn('Error refreshing route details after discount toggle:', err);
+        // Student / PWD discount toggle - update fares dynamically
+    const discountToggle = document.getElementById('discountToggle');
+    if (discountToggle) {
+        discountToggle.addEventListener('change', () => {
+            this.populateRoutesList();
+            // Refresh route options if they exist
+            const routeOptions = document.getElementById('route-options');
+            if (routeOptions && routeOptions.style.display !== 'none') {
+                // Re-plan route to update fares
+                const start = document.getElementById('startLocation').value;
+                const end = document.getElementById('endLocation').value;
+                if (start && end) {
+                    routePlanner.planRoute();
                 }
-            });
-        }
+            }
+            // Refresh route details if displayed
+            try {
+                if (routeManager.activeRoutes.length > 0) {
+                    const active = routeManager.activeRoutes[0];
+                    const data = routeManager.routeLayers[active]?.data || jeepneyRoutes[active];
+                    if (data) {
+                        const hour = 12;
+                        routeManager.updateRouteDetails(active, data, {}, hour);
+                    }
+                }
+            } catch (err) {
+                console.warn('Error refreshing route details after discount toggle:', err);
+            }
+        });
+    }
     }
 
     initializeUI() {
         this.populateRoutesList();
     }
 
-    formatFare(fareStr) {
-        const discountEnabled = document.getElementById('discountToggle')?.checked;
-        const discount = discountEnabled ? 2 : 0;
-        if (!fareStr || discount === 0) return fareStr;
+// Update the formatFare method to handle ranges properly
+formatFare(fareStr) {
+    const discountEnabled = document.getElementById('discountToggle')?.checked;
+    const discount = discountEnabled ? 2 : 0;
+    if (!fareStr) return fareStr;
 
-        const nums = fareStr.match(/(\d+)/g);
-        if (!nums) return fareStr;
+    // Handle fare ranges like "₱13-18"
+    const nums = fareStr.match(/(\d+)/g);
+    if (!nums) return fareStr;
 
-        const adjusted = nums.map(n => Math.max(parseInt(n, 10) - discount, 0));
-
-        if (adjusted.length === 1) {
-            return `₱${adjusted[0]}`;
-        }
-        return `₱${adjusted[0]}-₱${adjusted[1]}`.replace(/₱(\d+)-₱(\d+)/, '₱$1-$2');
+    if (nums.length === 1) {
+        const fare = Math.max(parseInt(nums[0], 10) - discount, 0);
+        return `₱${fare}`;
+    } else {
+        const minFare = Math.max(parseInt(nums[0], 10) - discount, 0);
+        const maxFare = Math.max(parseInt(nums[1], 10) - discount, 0);
+        return `₱${minFare}-₱${maxFare}`;
     }
+}
+
+// Update transfer fare calculation
+calculateTransferFare(route1Fare, route2Fare) {
+    const discountEnabled = document.getElementById('discountToggle')?.checked;
+    const discount = discountEnabled ? 2 : 0;
+    
+    // Extract numbers from fare strings
+    const getFareRange = (fareStr) => {
+        const nums = fareStr.match(/(\d+)/g);
+        if (!nums) return { min: 0, max: 0 };
+        if (nums.length === 1) {
+            const fare = Math.max(parseInt(nums[0], 10) - discount, 0);
+            return { min: fare, max: fare };
+        } else {
+            const min = Math.max(parseInt(nums[0], 10) - discount, 0);
+            const max = Math.max(parseInt(nums[1], 10) - discount, 0);
+            return { min, max };
+        }
+    };
+    
+    const fare1 = getFareRange(route1Fare);
+    const fare2 = getFareRange(route2Fare);
+    
+    const totalMin = fare1.min + fare2.min;
+    const totalMax = fare1.max + fare2.max;
+    
+    if (totalMin === totalMax) {
+        return `₱${totalMin}`;
+    } else {
+        return `₱${totalMin}-₱${totalMax}`;
+    }
+}
 
     showSuggestions(query, suggestionsId) {
         const suggestionsList = document.getElementById(suggestionsId);
@@ -548,13 +691,14 @@ matchLocationWithLandmarks(locationInput) {
     }
 
 
-    toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
-        
-        sidebar.classList.toggle('collapsed');
-        toggleBtn.textContent = sidebar.classList.contains('collapsed') ? '☰' : '✕';
-    }
+toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    
+    sidebar.classList.toggle('collapsed');
+    // Remove the textContent change that was causing rotation
+    // toggleBtn.textContent = sidebar.classList.contains('collapsed') ? '☰' : '✕';
+}
 
 populateRoutesList() {
     const routesList = document.getElementById('routes-list');
@@ -581,121 +725,125 @@ populateRoutesList() {
     });
 }
 
-    // Improved location handling
-    async useMyLocation(field, event) {
-        console.log('useMyLocation called with field:', field);
-        
-        if (!navigator.geolocation) {
-            alert('❌ Geolocation is not supported by your browser');
-            return;
-        }
+// FIXED: Improved location handling with consistent button styling
+async useMyLocation(field, event) {
+    console.log('useMyLocation called with field:', field);
+    
+    if (!navigator.geolocation) {
+        alert('❌ Geolocation is not supported by your browser');
+        return;
+    }
 
-        const button = event?.target;
-        if (button) {
-            button.textContent = '📍 Getting location...';
-            button.disabled = true;
-        }
+    const button = event?.target;
+    const originalHTML = button.innerHTML; // Save original HTML
+    
+    if (button) {
+        // Update to loading state while keeping Material Icon
+        button.innerHTML = '<span class="material-symbols-outlined btn-icon">my_location</span> Getting location...';
+        button.disabled = true;
+    }
 
-        try {
-            const position = await new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 0
-                });
+    try {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
             });
+        });
 
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            const accuracy = position.coords.accuracy;
-            
-            console.log('Location obtained:', { lat, lng, accuracy: accuracy + 'm' });
-            
-            this.userLocation = [lat, lng];
-            
-            // Clear existing markers
-            if (this.currentLocationMarker) {
-                this.map.removeLayer(this.currentLocationMarker);
-            }
-            if (this.accuracyCircle) {
-                this.map.removeLayer(this.accuracyCircle);
-            }
-            if (this.searchRadiusCircle) {
-                this.map.removeLayer(this.searchRadiusCircle);
-            }
-            
-            // Add accuracy circle
-            const displayAccuracy = Math.min(accuracy, 500);
-            this.accuracyCircle = L.circle([lat, lng], {
-                radius: displayAccuracy,
-                color: accuracy <= 50 ? '#00C851' : accuracy <= 100 ? '#ffbb33' : '#ff4444',
-                fillColor: accuracy <= 50 ? '#00C851' : accuracy <= 100 ? '#ffbb33' : '#ff4444',
-                fillOpacity: 0.2,
-                weight: 2
-            }).addTo(this.map);
-            
-            // Add location marker
-            this.currentLocationMarker = L.marker([lat, lng], {
-                icon: L.divIcon({
-                    className: 'current-location-marker',
-                    html: '📍',
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 30]
-                })
-            })
-            .addTo(this.map)
-            .bindPopup(`
-                <b>📍 Your Current Location</b><br>
-                Accuracy: ${Math.round(accuracy)} meters<br>
-                Coordinates: ${lat.toFixed(6)}, ${lng.toFixed(6)}
-            `)
-            .openPopup();
-            
-            // Center map on location
-            this.map.flyTo([lat, lng], 16, { duration: 1 });
-            
-            // Set the input field
-            const inputField = field === 'start' ? 'startLocation' : 'endLocation';
-            document.getElementById(inputField).value = `My Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-            
-            if (accuracy > 500) {
-                alert('📍 Location found (Low accuracy). For better results, enable GPS and go outside.');
-            }
-            
-            // Find nearest jeepney routes
-            if (field === 'start') {
-                await this.findNearestJeepneyRoutes([lat, lng]);
-            }
-
-        } catch (error) {
-            console.error('Location error:', error);
-            alert('❌ Could not get your location. Please ensure location services are enabled.');
-        } finally {
-            if (button) {
-                button.textContent = '📍 Use My Location';
-                button.disabled = false;
-            }
-        }
-    }
-
-    // Use for start location with route finding
-    async useMyLocationWithRoutes(field, event) {
-        await this.useMyLocation(field, event);
-    }
-
-    // Use for destination without route finding
-    async useMyLocationNoRoutes(field, event) {
-        const originalFindNearestJeepneyRoutes = this.findNearestJeepneyRoutes;
-        this.findNearestJeepneyRoutes = async () => {
-            console.log('Skipping route finding for simple location');
-        };
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
         
-        try {
-            await this.useMyLocation(field, event);
-        } finally {
-            this.findNearestJeepneyRoutes = originalFindNearestJeepneyRoutes;
+        console.log('Location obtained:', { lat, lng, accuracy: accuracy + 'm' });
+        
+        this.userLocation = [lat, lng];
+        
+        // Clear existing markers
+        if (this.currentLocationMarker) {
+            this.map.removeLayer(this.currentLocationMarker);
+        }
+        if (this.accuracyCircle) {
+            this.map.removeLayer(this.accuracyCircle);
+        }
+        if (this.searchRadiusCircle) {
+            this.map.removeLayer(this.searchRadiusCircle);
+        }
+        
+        // Add accuracy circle
+        const displayAccuracy = Math.min(accuracy, 500);
+        this.accuracyCircle = L.circle([lat, lng], {
+            radius: displayAccuracy,
+            color: accuracy <= 50 ? '#00C851' : accuracy <= 100 ? '#ffbb33' : '#ff4444',
+            fillColor: accuracy <= 50 ? '#00C851' : accuracy <= 100 ? '#ffbb33' : '#ff4444',
+            fillOpacity: 0.2,
+            weight: 2
+        }).addTo(this.map);
+        
+        // Add location marker with modern styling
+        this.currentLocationMarker = L.marker([lat, lng], {
+            icon: L.divIcon({
+                className: 'current-location-marker',
+                html: '📍',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            })
+        })
+        .addTo(this.map)
+        .bindPopup(`
+            <b>📍 Your Current Location</b><br>
+            Accuracy: ${Math.round(accuracy)} meters<br>
+            Coordinates: ${lat.toFixed(6)}, ${lng.toFixed(6)}
+        `)
+        .openPopup();
+        
+        // Center map on location
+        this.map.flyTo([lat, lng], 16, { duration: 1 });
+        
+        // Set the input field
+        const inputField = field === 'start' ? 'startLocation' : 'endLocation';
+        document.getElementById(inputField).value = `My Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+        
+        if (accuracy > 500) {
+            alert('📍 Location found (Low accuracy). For better results, enable GPS and go outside.');
+        }
+        
+        // Find nearest jeepney routes
+        if (field === 'start') {
+            await this.findNearestJeepneyRoutes([lat, lng]);
+        }
+
+    } catch (error) {
+        console.error('Location error:', error);
+        alert('❌ Could not get your location. Please ensure location services are enabled.');
+    } finally {
+        if (button) {
+            // RESTORE ORIGINAL STYLING WITH MATERIAL ICON
+            button.innerHTML = `<span class="material-symbols-outlined btn-icon">my_location</span> Use My Location (${field === 'start' ? 'Start' : 'End'})`;
+            button.disabled = false;
         }
     }
+}
+
+// Use for start location with route finding
+async useMyLocationWithRoutes(field, event) {
+    await this.useMyLocation(field, event);
+}
+
+// Use for destination without route finding  
+async useMyLocationNoRoutes(field, event) {
+    const originalFindNearestJeepneyRoutes = this.findNearestJeepneyRoutes;
+    this.findNearestJeepneyRoutes = async () => {
+        console.log('Skipping route finding for simple location');
+    };
+    
+    try {
+        await this.useMyLocation(field, event);
+    } finally {
+        this.findNearestJeepneyRoutes = originalFindNearestJeepneyRoutes;
+    }
+}
 
     // ENHANCED: Find nearest jeepney routes with boarding validation
     async findNearestJeepneyRoutes(userLocation) {
@@ -992,7 +1140,8 @@ displayNearestRoutes(routes, userLocation, searchRadius) {
         return R * c;
     }
 
-    clearLocationAndRoutes() {
+// Update the clearLocationAndRoutes method to reset buttons and clear markers
+clearLocationAndRoutes() {
     console.log('Clearing location inputs and routes...');
     
     document.getElementById('startLocation').value = '';
@@ -1001,8 +1150,9 @@ displayNearestRoutes(routes, userLocation, searchRadius) {
     this.userLocation = null;
     this.nearestRoutes = [];
     
-    // Clear custom destination marker
-    this.clearCustomDestination();
+    // Clear custom markers and reset buttons
+    this.clearAllCustomMarkers();
+    this.resetMapClickButtons();
     
     // Clear transfer points and walking routes
     this.clearAllTransferPoints();
@@ -1028,14 +1178,6 @@ displayNearestRoutes(routes, userLocation, searchRadius) {
     
     // ALWAYS reset to Batangas City center within bounds
     this.map.setView([13.7565, 121.0583], 15);
-    
-    // Reset map click mode
-    this.mapClickEnabled = false;
-    const button = document.getElementById('mapClickToggle');
-    if (button) {
-        button.textContent = '🗺️ Set Destination by Map Click';
-        button.style.background = '#e3f2fd';
-    }
     
     this.showNotification('🗑️ Cleared! Map reset to Batangas City center.', 'info');
 }
@@ -1123,68 +1265,192 @@ clearAllTransferPoints() {
         console.log('All walking routes cleared');
     }
 
-    // NEW: Toggle map click functionality
-    toggleMapClick() {
-        this.mapClickEnabled = !this.mapClickEnabled;
-        const button = document.getElementById('mapClickToggle');
-        
-        if (this.mapClickEnabled) {
-            button.textContent = '📍 Click on Map to Set Destination (Click to Cancel)';
-            button.style.background = '#ff9800';
-            this.showNotification('🗺️ Click anywhere on the map to set your destination', 'info');
+// FIXED: Enhanced map click functionality for both start and end
+toggleMapClick(field) {
+    this.mapClickField = field; // Store which field we're setting
+    this.mapClickEnabled = !this.mapClickEnabled;
+    
+    const startButton = document.getElementById('startMapClickToggle');
+    const endButton = document.getElementById('endMapClickToggle');
+    
+    if (this.mapClickEnabled) {
+        if (field === 'start') {
+            startButton.innerHTML = '<span class="material-symbols-outlined btn-icon">cancel</span> Click to Cancel';
+            startButton.style.background = '#ff9800';
+            endButton.disabled = true;
         } else {
-            button.textContent = '🗺️ Set Destination by Map Click';
-            button.style.background = '#e3f2fd';
-            this.clearCustomDestination();
-            this.showNotification('Map click mode disabled', 'info');
+            endButton.innerHTML = '<span class="material-symbols-outlined btn-icon">cancel</span> Click to Cancel';
+            endButton.style.background = '#ff9800';
+            startButton.disabled = true;
         }
+        this.showNotification(`🗺️ Click anywhere on the map to set your ${field === 'start' ? 'start' : 'destination'}`, 'info');
+    } else {
+        this.resetMapClickButtons();
+        // Clear any temporary markers that weren't confirmed
+        this.clearUnconfirmedMarkers();
+        this.showNotification('Map click mode disabled', 'info');
     }
+}
 
-    // NEW: Handle map click for custom destination
-    handleMapClick(latlng) {
-        // Clear previous custom destination
-        this.clearCustomDestination();
-        
-        // Add custom destination marker
-        this.customDestinationMarker = L.marker(latlng, {
-            icon: L.divIcon({
-                className: 'custom-destination-marker',
-                html: '🎯',
-                iconSize: [30, 30],
-                iconAnchor: [15, 30]
-            })
+// FIXED: Handle map click for both start and end destinations
+handleMapClick(latlng) {
+    if (!this.mapClickEnabled || !this.mapClickField) return;
+    
+    // Clear previous temporary marker for this field
+    this.clearUnconfirmedMarkers();
+    
+    // Create a temporary marker (will be removed if not confirmed)
+    const marker = L.marker(latlng, {
+        icon: L.divIcon({
+            className: this.mapClickField === 'start' ? 'custom-start-marker' : 'custom-destination-marker',
+            html: this.mapClickField === 'start' ? '⭐' : '🎯',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
         })
-        .addTo(this.map)
-        .bindPopup(`
-            <b>🎯 Custom Destination</b><br>
+    }).addTo(this.map);
+    
+    // Store the temporary marker
+    if (this.mapClickField === 'start') {
+        this.tempStartMarker = marker;
+    } else {
+        this.tempDestinationMarker = marker;
+    }
+    
+    // Create popup with use button
+    const popupContent = `
+        <div style="text-align: center; min-width: 200px;">
+            <b>${this.mapClickField === 'start' ? '⭐ Start' : '🎯 Destination'} Location</b><br>
             Coordinates: ${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}<br>
-            <button onclick="app.useCustomDestination()" class="control-btn success" style="margin-top: 5px;">
-                Use This Destination
+            <button onclick="app.confirmCustomLocation('${this.mapClickField}')" class="control-btn success" style="margin-top: 8px; width: 100%;">
+                Use This ${this.mapClickField === 'start' ? 'Start' : 'Destination'}
             </button>
-        `)
-        .openPopup();
-        
-        this.showNotification(`📍 Custom destination set! Click "Use This Destination" or click elsewhere to change.`, 'success');
-    }
-
-    // NEW: Use custom destination in route planning
-    useCustomDestination() {
-        if (!this.customDestinationMarker) {
-            this.showNotification('No custom destination set. Click on the map first.', 'error');
-            return;
+        </div>
+    `;
+    
+    marker.bindPopup(popupContent).openPopup();
+    
+    // Remove marker when popup is closed without confirmation
+    marker.on('popupclose', () => {
+        if ((this.mapClickField === 'start' && marker === this.tempStartMarker) || 
+            (this.mapClickField === 'end' && marker === this.tempDestinationMarker)) {
+            this.map.removeLayer(marker);
+            if (this.mapClickField === 'start') {
+                this.tempStartMarker = null;
+            } else {
+                this.tempDestinationMarker = null;
+            }
         }
+    });
+    
+    this.showNotification(`📍 Custom ${this.mapClickField} set! Click "Use This ${this.mapClickField === 'start' ? 'Start' : 'Destination'}" to confirm.`, 'success');
+}
 
-        const latlng = this.customDestinationMarker.getLatLng();
-        document.getElementById('endLocation').value = `Custom Destination (${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)})`;
-        
-        // Disable map click mode
-        this.mapClickEnabled = false;
-        const button = document.getElementById('mapClickToggle');
-        button.textContent = '🗺️ Set Destination by Map Click';
-        button.style.background = '#e3f2fd';
-        
-        this.showNotification('✅ Custom destination set! Now click "Find Jeepney Route"', 'success');
+// NEW: Confirm and save the custom location
+confirmCustomLocation(field) {
+    let tempMarker;
+    if (field === 'start') {
+        tempMarker = this.tempStartMarker;
+    } else {
+        tempMarker = this.tempDestinationMarker;
     }
+    
+    if (!tempMarker) {
+        this.showNotification(`No custom ${field} set. Click on the map first.`, 'error');
+        return;
+    }
+
+    const latlng = tempMarker.getLatLng();
+    const inputField = field === 'start' ? 'startLocation' : 'endLocation';
+    document.getElementById(inputField).value = `Custom ${field === 'start' ? 'Start' : 'Destination'} (${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)})`;
+    
+    // Convert temporary marker to permanent marker
+    this.convertToPermanentMarker(field, tempMarker, latlng);
+    
+    // Close the popup and remove temporary marker
+    tempMarker.closePopup();
+    this.map.removeLayer(tempMarker);
+    
+    // Clear temporary marker reference
+    if (field === 'start') {
+        this.tempStartMarker = null;
+    } else {
+        this.tempDestinationMarker = null;
+    }
+    
+    // Disable map click mode
+    this.resetMapClickButtons();
+    
+    this.showNotification(`✅ Custom ${field} set! Now click "Find Jeepney Route"`, 'success');
+}
+
+// NEW: Convert temporary marker to permanent marker
+convertToPermanentMarker(field, tempMarker, latlng) {
+    // Remove any existing permanent marker for this field
+    if (field === 'start' && this.customStartMarker) {
+        this.map.removeLayer(this.customStartMarker);
+    } else if (field === 'end' && this.customDestinationMarker) {
+        this.map.removeLayer(this.customDestinationMarker);
+    }
+    
+    // Create permanent marker (no popup)
+    const permanentMarker = L.marker(latlng, {
+        icon: L.divIcon({
+            className: field === 'start' ? 'custom-start-marker' : 'custom-destination-marker',
+            html: field === 'start' ? '⭐' : '🎯',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        })
+    }).addTo(this.map);
+    
+    // Store permanent marker
+    if (field === 'start') {
+        this.customStartMarker = permanentMarker;
+    } else {
+        this.customDestinationMarker = permanentMarker;
+    }
+}
+
+// NEW: Clear unconfirmed temporary markers
+clearUnconfirmedMarkers() {
+    if (this.tempStartMarker) {
+        this.map.removeLayer(this.tempStartMarker);
+        this.tempStartMarker = null;
+    }
+    if (this.tempDestinationMarker) {
+        this.map.removeLayer(this.tempDestinationMarker);
+        this.tempDestinationMarker = null;
+    }
+}
+
+// NEW: Use custom destination for both start and end
+useCustomDestination(field) {
+    if (!this.customDestinationMarker) {
+        this.showNotification(`No custom ${field} set. Click on the map first.`, 'error');
+        return;
+    }
+
+    const latlng = this.customDestinationMarker.getLatLng();
+    const inputField = field === 'start' ? 'startLocation' : 'endLocation';
+    document.getElementById(inputField).value = `Custom ${field === 'start' ? 'Start' : 'Destination'} (${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)})`;
+    
+    // Disable map click mode
+    this.mapClickEnabled = false;
+    this.mapClickField = null;
+    
+    const startButton = document.getElementById('startMapClickToggle');
+    const endButton = document.getElementById('endMapClickToggle');
+    
+    // Reset both buttons
+    startButton.innerHTML = '<span class="material-symbols-outlined btn-icon">place</span> Set Start by Map Click';
+    startButton.style.background = '#e3f2fd';
+    startButton.disabled = false;
+    
+    endButton.innerHTML = '<span class="material-symbols-outlined btn-icon">place</span> Set Destination by Map Click';
+    endButton.style.background = '#e3f2fd';
+    endButton.disabled = false;
+    
+    this.showNotification(`✅ Custom ${field} set! Now click "Find Jeepney Route"`, 'success');
+}
 
     // NEW: Clear custom destination
     clearCustomDestination() {
@@ -1380,7 +1646,7 @@ class RouteManager {
         }
     }
 
-    async createSnappedRoute(routeName, routeData) {
+async createSnappedRoute(routeName, routeData) {
     const hour = 12;
     
     try {
@@ -1399,7 +1665,7 @@ class RouteManager {
         
         const routeLayer = L.polyline(latlngs, {
             color: routeData.color,
-            weight: 6,
+            weight: 3, // Thinner lines
             opacity: 0.8,
             lineCap: 'round',
             lineJoin: 'round'
@@ -1437,7 +1703,7 @@ class RouteManager {
         
     } catch (error) {
         console.error('Error creating route:', error);
-        alert('Error displaying route. Please try again.');
+        // Don't show alert since the route usually displays anyway
     } finally {
         document.getElementById('loading').style.display = 'none';
     }
@@ -1543,9 +1809,10 @@ async showAllRoutes() {
                 
                 const routeLayer = L.polyline(latlngs, {
                     color: routeData.color,
-                    weight: 4,
+                    weight: 3, // Changed from 4 to 3 for thinner lines
                     opacity: 0.6,
-                    lineCap: 'round'
+                    lineCap: 'round',
+                    className: 'route-line' // Add class for additional styling
                 }).addTo(app.map);
 
                 // Add emoji direction markers for this route
@@ -1602,34 +1869,30 @@ async showAllRoutes() {
         }
     }
 
-    updateRouteDetails(routeName, routeData, routeInfo, hour) {
-            const currentDetails = document.getElementById('route-details').innerHTML;
-            if (currentDetails.includes('Transfer Route')) {
-                return;
-            }
-            
-            const detailsDiv = document.getElementById('route-details');
-            const distance = routeInfo.distance ? (routeInfo.distance / 1000).toFixed(1) : 'N/A';
-            
-            // Use the calculated route time instead of complex ETA calculation
-            const totalMinutes = routeInfo.duration ? Math.round(routeInfo.duration / 60) : 
-            routePlanner.calculateTravelTime(routeInfo.distance || 5000);
-            
-            // Show essential info with distance
-            detailsDiv.innerHTML = `
-                <h4>${routeName}</h4>
+updateRouteDetails(routeName, routeData, routeInfo, hour) {
+    const currentDetails = document.getElementById('route-details').innerHTML;
+    if (currentDetails.includes('Transfer Route')) {
+        return;
+    }
+    
+    const detailsDiv = document.getElementById('route-details');
+    const distance = routeInfo.distance ? (routeInfo.distance / 1000).toFixed(1) : 'N/A';
+    const totalMinutes = routeInfo.duration ? Math.round(routeInfo.duration / 60) : 
+                        routePlanner.calculateTravelTime(routeInfo.distance || 5000);
+    
+    detailsDiv.innerHTML = `
+        <div class="transfer-route-clean">
+            <h4>${routeName}</h4>
+            <div class="transfer-leg">
                 <p><strong>Distance:</strong> ${distance} km</p>
-                <p><strong>Estimated Time:</strong> ${totalMinutes} minutes (14 km/h average)</p>
+                <p><strong>Estimated Time:</strong> ${totalMinutes} minutes</p>
                 <p><strong>Fare:</strong> ${app.formatFare(routeData.fare)}</p>
-                
-                <div style="margin-top: 15px;">
-                    <button class="control-btn" style="background: #dc3545;" onclick="routeManager.clearAllRoutes()">
-                        🗑️ Clear This Route
-                    </button>
-                </div>
-            `;
-            detailsDiv.style.display = 'block';
-        }
+            </div>
+        </div>
+    `;
+    detailsDiv.style.display = 'block';
+    this.ensureProperLayout();
+}
 
 
     getTrafficMultiplier(hour) {
@@ -2207,74 +2470,146 @@ findNearestLandmarkToTransfer(transferPoint) {
     }
 
 formatDirectOption(routeData, option, index, startCoords, endCoords) {
-    const confidenceBadge = option.confidence === 'high' ? '🟢' : option.confidence === 'medium' ? '🟡' : '🔴';
+    const confidenceClass = option.confidence === 'high' ? 'confidence-high' : 
+                          option.confidence === 'medium' ? 'confidence-medium' : 'confidence-low';
     
     return `
-        <div class="route-option direct-route" onclick="routeManager.createSnappedRoute('${option.routeName}', jeepneyRoutes['${option.routeName}'])">
-            <div class="option-header">
+        <div class="route-option-clean">
+            <div class="option-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <strong>${index + 1}. ${option.routeName}</strong>
-                <span class="confidence-badge">${confidenceBadge}</span>
+                <span class="confidence-badge-clean ${confidenceClass}" title="${option.confidence} confidence"></span>
             </div>
-            <div class="route-details">
-                <div class="route-leg">
-                    <span class="leg-walk">🚶 ${Math.round(option.startWalk.distance)}m (${option.startWalk.time}min)</span>
-                    → <span class="leg-jeep">🚍 ${option.routeTime}min</span>
-                    → <span class="leg-walk">🚶 ${Math.round(option.endWalk.distance)}m (${option.endWalk.time}min)</span>
+            <div class="route-leg-clean">
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Walk</span>
+                    <span class="step-detail">${Math.round(option.startWalk.distance)}m</span>
                 </div>
-                <div class="route-summary">
-                    🕐 Total: ${option.totalTime}min • 💰 ${app.formatFare(routeData.fare)}
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Jeepney</span>
+                    <span class="step-detail">${option.routeName}</span>
+                    <div style="font-size: 11px; color: #666; margin-left: 10px;">
+                        ${option.routeTime} min • ${Math.round(option.routeDistance)}m
+                    </div>
+                </div>
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Walk</span>
+                    <span class="step-detail">${Math.round(option.endWalk.distance)}m</span>
                 </div>
             </div>
+            <div class="route-summary-clean">
+                Total: ${option.totalTime}min • Fare: ${app.formatFare(routeData.fare)}
+            </div>
+            <button class="control-btn success" onclick="routeManager.createSnappedRoute('${option.routeName}', jeepneyRoutes['${option.routeName}'])" style="margin-top: 10px; width: 100%;">
+                Show This Route
+            </button>
         </div>
     `;
 }
 
-    // Format transfer route option
-    // UPDATED: Format transfer route option with enhanced information
 formatTransferOption(option, index) {
+    const confidenceClass = 'confidence-medium';
+    const transferFare = this.calculateTransferFare(option.routeData[0].fare, option.routeData[1].fare);
+    
     return `
-        <div class="route-option transfer-route">
-            <div class="option-header">
+        <div class="route-option-clean transfer-route">
+            <div class="option-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <strong>${index + 1}. ${option.routeNames[0]} + ${option.routeNames[1]}</strong>
-                <span class="confidence-badge">🟡</span>
+                <span class="confidence-badge-clean ${confidenceClass}" title="medium confidence"></span>
             </div>
-            <div class="route-details">
-            <div class="route-timeline">
-                <div class="route-leg">
-                    <div class="route-step">
-                    <span class="arrow">→</span>
-                    <span class="leg-walk">🚶 ${Math.round(option.startWalk.distance)}m (${option.startWalk.time}min)<br></span>
-                    </div>
-                    <div class="route-step">
-                    <span class="arrow">→</span>
-                    <span class="leg-jeep">🚍 ${option.routeNames[0]} (${option.routeTimes[0]}min)<br></span>
-                    </div>
-                    <div class="route-step transfer">
-                    <div class="route-step">
-                    <span class="arrow">→</span>
-                    <span class="leg-transfer">🔄 Transfer (${option.transfer.walkTime}min)<br></span>
-                    </div>
-                    </div>
-                    <div class="route-step">
-                    <span class="arrow">→</span>
-                    <span class="leg-jeep">🚍 ${option.routeNames[1]} (${option.routeTimes[1]}min)<br></span>
-                    </div>
-                    <div class="route-step">
-                    <span class="arrow">→</span>
-                    <span class="leg-walk">🚶 ${Math.round(option.endWalk.distance)}m (${option.endWalk.time}min)</span>
+            <div class="route-leg-clean">
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Walk</span>
+                    <span class="step-detail">${Math.round(option.startWalk.distance)}m</span>
+                </div>
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Jeepney</span>
+                    <span class="step-detail">${option.routeNames[0]}</span>
+                    <div style="font-size: 11px; color: #666; margin-left: 10px;">
+                        ${option.routeTimes[0]} min • ${Math.round(option.routeDistances[0])}m
                     </div>
                 </div>
-            </div>
-                <div class="route-summary">
-                    🕐 Total: ${option.totalTime}min • 💰 ₱${option.totalFare}
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Transfer</span>
+                    <span class="step-detail">${Math.round(option.transfer.distance)}m</span>
                 </div>
-                
-                <button class="control-btn success" onclick="routePlanner.showTransferRouteWithStops(['${option.routeNames[0]}', '${option.routeNames[1]}'], ${JSON.stringify(option.transfer).replace(/"/g, '&quot;')})">
-                    🗺️ Show Transfer Points
-                </button>
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Jeepney</span>
+                    <span class="step-detail">${option.routeNames[1]}</span>
+                    <div style="font-size: 11px; color: #666; margin-left: 10px;">
+                        ${option.routeTimes[1]} min • ${Math.round(option.routeDistances[1])}m
+                    </div>
+                </div>
+                <div class="route-step-clean">
+                    <span class="arrow-clean">→</span>
+                    <span class="step-type">Walk</span>
+                    <span class="step-detail">${Math.round(option.endWalk.distance)}m</span>
+                </div>
             </div>
+            <div class="route-summary-clean">
+                Total: ${option.totalTime}min • Fare: ${transferFare}
+            </div>
+            
+            <button class="control-btn success" onclick="routePlanner.showTransferRouteWithStops(['${option.routeNames[0]}', '${option.routeNames[1]}'], ${JSON.stringify(option.transfer).replace(/"/g, '&quot;')})" style="margin-top: 10px; width: 100%;">
+                Show Transfer Points
+            </button>
         </div>
     `;
+}
+
+// Add this method to the RoutePlanner class
+calculateTransferFare(route1Fare, route2Fare) {
+    const discountEnabled = document.getElementById('discountToggle')?.checked;
+    const discount = discountEnabled ? 2 : 0;
+    
+    // Extract numbers from fare strings
+    const getFareRange = (fareStr) => {
+        const nums = fareStr.match(/(\d+)/g);
+        if (!nums) return { min: 0, max: 0 };
+        if (nums.length === 1) {
+            const fare = Math.max(parseInt(nums[0], 10) - discount, 0);
+            return { min: fare, max: fare };
+        } else {
+            const min = Math.max(parseInt(nums[0], 10) - discount, 0);
+            const max = Math.max(parseInt(nums[1], 10) - discount, 0);
+            return { min, max };
+        }
+    };
+    
+    const fare1 = getFareRange(route1Fare);
+    const fare2 = getFareRange(route2Fare);
+    
+    const totalMin = fare1.min + fare2.min;
+    const totalMax = fare1.max + fare2.max;
+    
+    if (totalMin === totalMax) {
+        return `₱${totalMin}`;
+    } else {
+        return `₱${totalMin}-₱${totalMax}`;
+    }
+}
+
+// Ensure route details appear before available routes
+ensureProperLayout() {
+    const detailsDiv = document.getElementById('route-details');
+    const routesList = document.getElementById('routes-list');
+    const sidebar = document.getElementById('sidebar');
+    
+    if (detailsDiv && routesList && sidebar) {
+        // Remove both elements
+        if (detailsDiv.parentNode === sidebar) sidebar.removeChild(detailsDiv);
+        if (routesList.parentNode === sidebar) sidebar.removeChild(routesList);
+        
+        // Re-add in correct order
+        sidebar.appendChild(detailsDiv);
+        sidebar.appendChild(routesList);
+    }
 }
 
 // Show transfer route on map
@@ -2531,54 +2866,52 @@ addTransferPointMarker(transferPoint, routeNames) {
     .bindPopup('Transfer walking area - look for next jeepney stop in this area');
 }
 
-// NEW: Update route details for transfer routes
-// SIMPLIFIED: Update route details for transfer routes
+// SIMPLIFIED: Update route details for transfer routes without emojis and times
 updateTransferRouteDetails(routeNames, transferPoint) {
     const detailsDiv = document.getElementById('route-details');
     
     const route1Data = jeepneyRoutes[routeNames[0]];
     const route2Data = jeepneyRoutes[routeNames[1]];
     
+    // Calculate transfer fare range
+    const transferFare = this.calculateTransferFare(route1Data.fare, route2Data.fare);
+    
     detailsDiv.innerHTML = `
-        <h4>🔄 Transfer Route: ${routeNames[0]} → ${routeNames[1]}</h4>
-        
-        <div class="journey-leg">
-            <h5>🚶 First Jeep: ${routeNames[0]}</h5>
-            <p><strong>Fare:</strong> ${app.formatFare(route1Data.fare)}</p>
-            <div class="boarding-info primary">
-                <strong>📍 Board:</strong> Any stop along the route
+        <div class="transfer-route-clean">
+            <h4>Transfer Route: ${routeNames[0]} → ${routeNames[1]}</h4>
+            
+            <div class="transfer-leg">
+                <h5>First Jeep: ${routeNames[0]}</h5>
+                <p><strong>Fare:</strong> ${app.formatFare(route1Data.fare)}</p>
+                <div class="boarding-info primary">
+                    <strong>Board:</strong> Any stop along the route
+                </div>
             </div>
-        </div>
-        
-        <div class="transfer-point">
-            <h5>🔄 Transfer Point</h5>
-            <p><strong>Walk:</strong> ${transferPoint.walkTime} minutes (${Math.round(transferPoint.distance)}m)</p>
-            <div class="boarding-info warning">
-                <strong>📍 Switch to:</strong> ${routeNames[1]}
+            
+            <div class="transfer-point-clean">
+                Transfer Point
+                <div style="font-size: 0.9em; font-weight: normal; margin-top: 5px;">
+                    Switch to: ${routeNames[1]}
+                </div>
             </div>
-        </div>
-        
-        <div class="journey-leg">
-            <h5>🚶 Second Jeep: ${routeNames[1]}</h5>
-            <p><strong>Fare:</strong> ${app.formatFare(route2Data.fare)}</p>
-            <div class="boarding-info primary">
-                <strong>📍 Alight:</strong> At your destination
+            
+            <div class="transfer-leg">
+                <h5>Second Jeep: ${routeNames[1]}</h5>
+                <p><strong>Fare:</strong> ${app.formatFare(route2Data.fare)}</p>
+                <div class="boarding-info primary">
+                    <strong>Alight:</strong> At your destination
+                </div>
             </div>
-        </div>
-        
-        <div class="fare-breakdown">
-            <h5>💰 Total Fare: ₱${this.extractFare(route1Data.fare) + this.extractFare(route2Data.fare)}</h5>
-            <p><strong>${routeNames[0]}:</strong> ${app.formatFare(route1Data.fare)}</p>
-            <p><strong>${routeNames[1]}:</strong> ${app.formatFare(route2Data.fare)}</p>
-        </div>
-        
-        <div style="margin-top: 15px;">
-            <button class="control-btn secondary" onclick="routeManager.clearAllRoutes()">
-                🗑️ Clear Routes
-            </button>
+            
+            <div class="fare-breakdown-clean">
+                <h5>Total Fare: ${transferFare}</h5>
+                <p><strong>${routeNames[0]}:</strong> ${app.formatFare(route1Data.fare)}</p>
+                <p><strong>${routeNames[1]}:</strong> ${app.formatFare(route2Data.fare)}</p>
+            </div>
         </div>
     `;
     detailsDiv.style.display = 'block';
+    this.ensureProperLayout();
 }
 areRoutesCompatible(route1Name, route2Name) {
     const incompatiblePairs = {
@@ -2663,7 +2996,7 @@ window.resetSystem = function() {
 
 window.clearInputsAndRoutes = function() {
     app.clearLocationAndRoutes();
-};
+}
 
 // Add findNearestMainRoutes method to app
 app.findNearestMainRoutes = function() {
@@ -2766,16 +3099,16 @@ class MobileUI {
         observer.observe(sidebar, { attributes: true });
     }
 
-    toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
-        
-        sidebar.classList.toggle('expanded');
-        
-        if (toggleBtn) {
-            toggleBtn.textContent = sidebar.classList.contains('expanded') ? '▼' : '▲';
-        }
+toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    
+    sidebar.classList.toggle('expanded');
+    
+    if (toggleBtn) {
+        // toggleBtn.textContent = sidebar.classList.contains('expanded') ? '▼' : '▲'; // REMOVE THIS
     }
+}
 }
 
 // Initialize mobile UI
@@ -2791,7 +3124,8 @@ function toggleSidebarUniversal() {
         const toggleBtn = document.getElementById('sidebarToggle');
         
         sidebar.classList.toggle('collapsed');
-        toggleBtn.textContent = sidebar.classList.contains('collapsed') ? '☰' : '✕';
+        // Remove the textContent change that was causing rotation
+        // toggleBtn.textContent = sidebar.classList.contains('collapsed') ? '☰' : '✕';
     }
 }
 

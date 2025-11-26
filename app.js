@@ -2823,13 +2823,14 @@ async showTransferRouteWithStops(routeNames, transferPoint) {
 
 // NEW: Add transfer point marker
 // ENHANCED: Add transfer point marker with better information
+// UPDATED: Add transfer point marker without auto-popup
 addTransferPointMarker(transferPoint, routeNames) {
     if (!transferPoint || !transferPoint.point) return;
     
     const nearestLandmark = this.findNearestLandmarkToTransfer(transferPoint.point);
     const landmarkInfo = nearestLandmark ? `<br><small>Near: ${nearestLandmark}</small>` : '';
     
-    // Create transfer point marker
+    // Create transfer point marker WITHOUT auto-popup
     L.marker(transferPoint.point, {
         icon: L.divIcon({
             className: 'transfer-point-marker',
@@ -2843,17 +2844,12 @@ addTransferPointMarker(transferPoint, routeNames) {
         <div style="text-align: center; max-width: 250px;">
             <b style="color: #ff9800;">🔄 Transfer Point</b><br>
             <strong>Switch from:</strong> ${routeNames[0]}<br>
-            <strong>Switch to:</strong> ${routeNames[1]}<br>
-            <small>🚶 Walk: ${transferPoint.walkTime} min (${Math.round(transferPoint.distance)}m)</small>
-            ${landmarkInfo}
-            <div style="margin-top: 8px;">
-                <small>💡 <em>Look for the ${routeNames[1]} jeepney stop</em></small>
-            </div>
+            <strong>Switch to:</strong> ${routeNames[1]}${landmarkInfo}
         </div>
-    `)
-    .openPopup();
+    `);
+    // REMOVED: .openPopup() - this prevents auto-opening
     
-    // Add walking route circle
+    // Add walking route circle WITHOUT walk info
     L.circle(transferPoint.point, {
         radius: Math.min(transferPoint.distance, 200),
         color: '#ff9800',
@@ -2863,7 +2859,7 @@ addTransferPointMarker(transferPoint, routeNames) {
         dashArray: '5, 5'
     })
     .addTo(app.map)
-    .bindPopup('Transfer walking area - look for next jeepney stop in this area');
+    .bindPopup('Transfer walking area');
 }
 
 // SIMPLIFIED: Update route details for transfer routes without emojis and times

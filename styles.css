@@ -462,7 +462,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     #map {
-        height: 60vh;
+        height: 100vh;
         width: 100%;
         position: fixed;
         top: 0;
@@ -470,40 +470,42 @@ h1, h2, h3, h4, h5, h6 {
         z-index: 1;
     }
 
+    /* UPDATED: Mobile sidebar - bottom up, full width, 40% height */
     .sidebar {
         position: fixed;
         top: auto;
-        bottom: 0px;
+        bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
-        max-height: 50vh;
+        height: 40vh; /* Fixed height of 40% of viewport */
+        max-height: 40vh; /* Ensure it doesn't exceed 40% */
         border-radius: 20px 20px 0 0;
         padding: 15px;
-        transform: translateY(100%);
+        transform: translateY(100%); /* Start hidden below screen */
         transition: transform 0.3s ease;
         z-index: 1000;
         background: white;
         box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        overflow-y: auto; /* Allow scrolling if content exceeds height */
     }
 
     .sidebar.expanded {
-        transform: translateY(0);
-        max-height: 85vh;
+        transform: translateY(0); /* Slide up to show */
     }
 
     .sidebar.collapsed {
-        transform: translateX(100%);
+        transform: translateY(100%); /* Hide below screen */
     }
 
     .sidebar-toggle:checked ~ .sidebar {
         transform: translateY(0);
     }
 
-    /* Alternative: Floating action button style */
+    /* UPDATED: Floating action button for mobile */
     .toggle-btn {
         position: fixed;
-        bottom: 20px; /* Floating above content */
+        bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
         background: #2196f3;
@@ -539,12 +541,12 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .sidebar.expanded + .toggle-btn {
-        bottom: 20px;
+        bottom: calc(40vh + 10px); /* Position above the expanded sidebar */
         background: #dc3545;
     }
 
     .sidebar-toggle:checked + .toggle-btn {
-        bottom: 20px;
+        bottom: calc(40vh + 10px);
         transform: translateX(-50%);
         background: #dc3545;
     }
@@ -617,16 +619,16 @@ h1, h2, h3, h4, h5, h6 {
 /* Landscape */
 @media (max-width: 768px) and (orientation: landscape) {
     #map {
-        height: 40vh;
+        height: 100vh;
     }
     
     .sidebar {
+        height: 60vh; /* Slightly taller in landscape */
         max-height: 60vh;
-        bottom: 100px;
     }
 
     .toggle-btn {
-        bottom: 60vh;
+        bottom: calc(60vh + 10px); /* Adjust button position for landscape */
     }
     
     .sidebar.expanded {
@@ -858,10 +860,6 @@ h1, h2, h3, h4, h5, h6 {
 
 #routes-list {
     order: 2;
-}
-
-.section-title {
-    order: 3;
 }
 
 /* Remove clear routes button from route details */
@@ -1206,5 +1204,202 @@ h1, h2, h3, h4, h5, h6 {
     .available-routes-container {
         margin-top: 10px;
         padding-top: 10px;
+    }
+}
+
+
+/* Phone */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    #map {
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    /* UPDATED: Mobile sidebar - bottom up, full width, 70% height */
+    .sidebar {
+        position: fixed;
+        top: 30vh; /* Start 30% from top */
+        bottom: 0; /* Fill all the way to bottom */
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 70vh; /* Fixed height of 70% of viewport */
+        max-height: 70vh; /* Ensure it doesn't exceed 70% */
+        border-radius: 20px 20px 0 0;
+        padding: 15px;
+        transform: translateY(100%); /* Start hidden below screen */
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        background: white;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        overflow-y: auto;
+    }
+
+    .sidebar.expanded {
+        transform: translateY(0); /* Slide up to show */
+    }
+
+    .sidebar.collapsed {
+        transform: translateY(100%); /* Hide below screen */
+    }
+
+    .sidebar-toggle:checked ~ .sidebar {
+        transform: translateY(0);
+    }
+
+    /* UPDATED: Toggle button moved to upper right */
+/* UPDATED: Toggle button moved to upper right */
+.toggle-btn {
+    position: fixed !important;
+    top: 20px !important;
+    right: 10px !important;
+    left: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    background: #2196f3;
+    color: white;
+    border-radius: 50px;
+    width: 140px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(33, 150, 243, 0.4);
+    z-index: 1001;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background: #1976d2;
+    transform: scale(1.05) !important;
+}
+
+.sidebar.expanded + .toggle-btn {
+    top: 20px !important;
+    right: 10px !important;
+    background: #dc3545;
+}
+
+.sidebar-toggle:checked + .toggle-btn {
+    top: 20px !important;
+    right: 10px !important;
+    transform: none !important;
+    background: #dc3545;
+}
+
+    .sidebar-toggle:checked + .toggle-btn:hover {
+        background: #c82333;
+    }
+
+    .sidebar-toggle:checked + .toggle-btn::after {
+        content: "Hide Routes";
+    }
+
+    .search-box {
+        padding: 12px;
+        margin-bottom: 10px;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .control-btn {
+        padding: 12px 16px;
+        font-size: 14px;
+        margin: 4px 2px;
+        width: 100%;
+    }
+
+    .location-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .location-btn {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .route-item {
+        padding: 12px;
+        margin: 8px 0;
+    }
+
+    .route-options {
+        padding: 12px;
+        margin-top: 10px;
+    }
+}
+
+/* Landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+    #map {
+        height: 100vh;
+    }
+    
+    .sidebar {
+        height: 80vh; /* Taller in landscape */
+        max-height: 80vh;
+        top: 20vh; /* Less space at top in landscape */
+    }
+
+    .toggle-btn {
+        top: 10px; /* Adjust for landscape */
+        right: 10px;
+    }
+}
+
+/* Fix Available Routes layout */
+.available-routes-container {
+    margin-top: auto; /* Push to bottom */
+    padding-top: 20px;
+    border-top: 1px solid #e1e5e9;
+    order: 4; /* Ensure it comes after route details */
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.route-planner {
+    flex-shrink: 0;
+}
+
+#route-details {
+    flex-shrink: 0;
+}
+
+.loading {
+    flex-shrink: 0;
+}
+
+#routes-list {
+    max-height: 400px; /* CHANGED: Increased from 300px to 400px */
+    overflow-y: auto;
+    margin-top: 10px; /* CHANGED: Added space below "Available Routes" text */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .available-routes-container {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+    
+    #routes-list {
+        max-height: 300px; /* CHANGED: Increased for mobile too */
+        margin-top: 8px; /* CHANGED: Space below text on mobile */
     }
 }

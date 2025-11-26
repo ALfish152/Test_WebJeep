@@ -86,6 +86,8 @@ initializeBoardingZones() {
     };
 }
 
+
+
 // ENHANCED: Initialize invalid route combinations
 initializeInvalidCombinations() {
     return {
@@ -303,6 +305,22 @@ initializeMap() {
     });
 
     this.showNotification('🗺️ Map locked to Batangas City', 'info');
+}
+
+// ENHANCED: Close sidebar on mobile
+closeSidebarOnMobile() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        const toggleCheckbox = document.getElementById('sidebarToggle');
+        
+        if (sidebar) {
+            sidebar.classList.remove('expanded');
+        }
+        if (toggleCheckbox) {
+            toggleCheckbox.checked = false;
+        }
+        console.log('Sidebar closed on mobile');
+    }
 }
 
 // ENHANCED: Show landmarks with priority for start and destination
@@ -1266,6 +1284,7 @@ clearAllTransferPoints() {
     }
 
 // FIXED: Enhanced map click functionality for both start and end
+// FIXED: Enhanced map click functionality for both start and end
 toggleMapClick(field) {
     this.mapClickField = field; // Store which field we're setting
     this.mapClickEnabled = !this.mapClickEnabled;
@@ -1283,7 +1302,10 @@ toggleMapClick(field) {
             endButton.style.background = '#ff9800';
             startButton.disabled = true;
         }
-        this.showNotification(`🗺️ Click anywhere on the map to set your ${field === 'start' ? 'start' : 'destination'}`, 'info');
+        this.showNotification(`📍 Click anywhere on the map to set your ${field === 'start' ? 'start' : 'destination'}`, 'info');
+        
+        // NEW: Close sidebar on mobile when starting map click
+        this.closeSidebarOnMobile();
     } else {
         this.resetMapClickButtons();
         // Clear any temporary markers that weren't confirmed
@@ -1346,6 +1368,7 @@ handleMapClick(latlng) {
 }
 
 // NEW: Confirm and save the custom location
+// NEW: Confirm and save the custom location
 confirmCustomLocation(field) {
     let tempMarker;
     if (field === 'start') {
@@ -1379,6 +1402,9 @@ confirmCustomLocation(field) {
     
     // Disable map click mode
     this.resetMapClickButtons();
+    
+    // NEW: Close sidebar on mobile after confirming location
+    this.closeSidebarOnMobile();
     
     this.showNotification(`✅ Custom ${field} set! Now click "Find Jeepney Route"`, 'success');
 }
@@ -1700,6 +1726,9 @@ async createSnappedRoute(routeName, routeData) {
 
         this.updateRouteDetails(routeName, routeData, route, hour);
         this.updateActiveRoute(routeName);
+        
+        // NEW: Close sidebar on mobile after showing route
+        app.closeSidebarOnMobile();
         
     } catch (error) {
         console.error('Error creating route:', error);
@@ -2737,6 +2766,7 @@ async showTransferRoute(routeNames) {
     // NEW: Show transfer route with pick-up and drop-off points
 // UPDATED: Show transfer route with pick-up and drop-off points
 // FIXED: Show transfer route with both routes displayed
+// UPDATED: Show transfer route with pick-up and drop-off points
 async showTransferRouteWithStops(routeNames, transferPoint) {
     // CLEAR ALL ROUTES FIRST - but only once
     routeManager.clearAllRoutesSilently();
@@ -2812,6 +2842,9 @@ async showTransferRouteWithStops(routeNames, transferPoint) {
         
         // Update route details with transfer information
         this.updateTransferRouteDetails(routeNames, transferPoint);
+        
+        // NEW: Close sidebar on mobile after showing transfer route
+        app.closeSidebarOnMobile();
         
     } catch (error) {
         console.error('Error showing transfer route:', error);

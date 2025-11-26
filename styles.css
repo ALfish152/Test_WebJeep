@@ -2,19 +2,17 @@
     box-sizing: border-box;
 }
 
-body {
+html, body {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
 }
 
 #map {
     height: 100vh;
     width: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1;
@@ -58,11 +56,17 @@ body {
 .sidebar-toggle:checked ~ .sidebar {
   transform: translateX(100%);
 }
+.material-symbols-outlined {
+    color: black;
+    font-size: 30px;
+}
 
 .toggle-btn {
   position: absolute;
   top: 350px;
   right: 400px;
+  justify-content: center;
+  align-items: center;
   background-color: white;
   color: black;
   border: none;
@@ -71,7 +75,6 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 1100;
-  font-size: 18px;
   box-shadow: 0 0 8px rgba(0,0,0,0.2);
 }
 
@@ -83,12 +86,8 @@ body {
   right: 0;
   border-radius: 10px 0 0 10px;
 }
-.arrow {
-  display: inline-block;
-  transition: transform 0.4s ease;
-}
 
-.sidebar-toggle:checked + .toggle-btn .arrow {
+.sidebar-toggle:checked + .toggle-btn .material-symbols-outlined {
   transform: rotate(180deg);
 }
 
@@ -427,27 +426,6 @@ body {
 .medium-confidence { background: #ffc107; }
 .low-confidence { background: #dc3545; }
 
-@media (max-width: 768px) {
-    .sidebar {
-        width: 95%;
-        right: 2.5%;
-        max-height: 50vh;
-    }
-    
-    .sidebar.collapsed {
-        transform: translateY(calc(-100% + 60px));
-    }
-    
-    .sidebar-toggle {
-        left: 50%;
-        transform: translateX(-50%);
-        top: auto;
-        bottom: -40px;
-        border-radius: 0 0 6px 6px;
-    }
-    
-}
-
 .route-type-badge {
     display: inline-block;
     padding: 3px 8px;
@@ -606,18 +584,16 @@ body {
     border: 2px dashed #ffb74d;
 }
 
-.route-timeline {
-  margin: 8px 0;
-  background: white;
-  border-radius: 6px;
-  border-left: 4px solid #4caf50;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.route-leg {    
-  font-size: 14px;
-  color: black;
-  line-height: 1;
-  padding: 12px;
+.route-leg {  
+    margin: 8px 0;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #4caf50;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 14px;
+    color: black;
+    line-height: 1;
+    padding: 12px;
   
 
 }
@@ -944,16 +920,6 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-@media (max-width: 768px) {
-    .suggestion-buttons {
-        flex-direction: column;
-    }
-    
-    .accessibility-info {
-        font-size: 0.75em;
-    }
-}
-
 /* Enhanced Landmark Markers */
 .primary-landmark-marker {
     font-size: 35px;
@@ -992,6 +958,16 @@ body {
     font-size: 16px;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
+}
+
+/* Direction marker emoji placed along polylines */
+.direction-marker {
+    font-size: 20px;
+    line-height: 1;
+    pointer-events: none; /* don't block map interactions */
+    z-index: 650; /* above most map layers */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    filter: drop-shadow(0 0 4px rgba(0,0,0,0.45));
 }
 
 /* Optimized Route Note */
@@ -1087,14 +1063,14 @@ body {
     .sidebar {
         position: fixed;
         top: auto;
-        bottom: 200px;
+        bottom: 0px;
         left: 0;
         right: 0;
         width: 100%;
-        max-height: 40vh;
+        max-height: 50vh;
         border-radius: 20px 20px 0 0;
         padding: 15px;
-        transform: translateY(calc(100% - 50px));
+        transform: translateY(100%);
         transition: transform 0.3s ease;
         z-index: 1000;
         background: white;
@@ -1106,27 +1082,55 @@ body {
         max-height: 85vh;
     }
 
+    .sidebar.collapsed {
+        transform: translateX(100%);
+    }
+
+    .sidebar-toggle:checked ~ .sidebar {
+        transform: translateY(0);
+    }
+
     .toggle-btn {
         position: fixed;
-        bottom: 40vh;
-        right: 15px;
+        bottom: -25px;
+        top: auto;
+        left: 180px;
+        right: 0;
+        margin: 0 auto;
         background: white;
         color: white;
         border-radius: 10px 0 0 10px;
         width: 50px;
-        height: 50px;
+        height: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 20px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         z-index: 1001;
+        transform: translateY(100%);
         border: none;
         cursor: pointer;
+        rotate: calc(90deg);
     }
 
     .sidebar.expanded + .toggle-btn {
+        transform: translateY(100%);
         bottom: 85vh;
+    }
+
+    .sidebar-toggle:checked + .toggle-btn {
+        bottom: 45vh;
+        top: auto;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        transform: translateY(0);
+        border-radius: 10px 0 0 10px;
+    }
+
+    .sidebar-toggle:checked + .toggle-btn .material-symbols-outlined {
+    transform: rotate(180deg);
     }
 
 
@@ -1191,3 +1195,18 @@ body {
         max-height: 60vh;
     }
 }
+
+/* City Boundary Styling */
+.city-boundary {
+    pointer-events: none;
+}
+
+/* Make sure map controls are visible */
+.leaflet-control-zoom {
+    z-index: 1000;
+}
+
+.leaflet-control-scale {
+    z-index: 1000;
+}
+

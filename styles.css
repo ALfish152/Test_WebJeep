@@ -1,8 +1,9 @@
-/* Improved Typography */
+/* Reset all elements to use border-box */
 * {
     box-sizing: border-box;
 }
 
+/* Base page styles */
 html, body {
     margin: 0;
     padding: 0;
@@ -12,12 +13,13 @@ html, body {
     line-height: 1.5;
 }
 
+/* Heading styles */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     line-height: 1.3;
 }
 
-/* Map Styles */
+/* Full-screen map container */
 #map {
     height: 100vh;
     width: 100%;
@@ -27,6 +29,7 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1;
 }
 
+/* Leaflet zoom control links */
 .leaflet-bar > a:link {
     height: 40px;
     width: 40px;
@@ -35,6 +38,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 30px;
 }
 
+/* Map scale display */
 .leaflet-control-scale-line {
     display: inline-flexbox;
     bottom: 10px;
@@ -42,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 15px;
 }
 
-/* Sidebar Styles */
+/* Main sidebar container */
 .sidebar {
     position: absolute;
     top: 10px;
@@ -58,19 +62,22 @@ h1, h2, h3, h4, h5, h6 {
     transition: transform 0.3s ease;
 }
 
+/* Sidebar when collapsed (hidden) */
 .sidebar.collapsed {
     transform: translateX(430px);
 }
 
+/* Hidden checkbox for sidebar toggle */
 .sidebar-toggle {
     display: none;
 }
 
+/* Show sidebar when checkbox is checked */
 .sidebar-toggle:checked ~ .sidebar {
     transform: translateX(100%);
 }
 
-/* Toggle Button Styles */
+/* Sidebar toggle button */
 .toggle-btn {
     position: absolute;
     top: 20px;
@@ -84,44 +91,38 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 10px 0 0 10px;
     padding: 12px 8px;
     cursor: pointer;
-    transition: right 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* CHANGED */
+    transition: right 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     z-index: 1100;
     box-shadow: 0 0 8px rgba(0,0,0,0.2);
     width: 44px;
     height: 44px;
 }
 
+/* Toggle button hover effect */
 .toggle-btn:hover {
     box-shadow: 0 4px 8px rgba(14, 17, 20, 0.64);
     background-color: #f5f5f5;
 }
 
+/* Icon inside toggle button */
 .toggle-icon {
     font-size: 24px;
-    /* Remove transition if it exists */
-    /* transition: transform 0.3s ease; */
 }
 
+/* Toggle button position when sidebar is open */
 .sidebar-toggle:checked + .toggle-btn {
     right: 10px;
     border-radius: 10 0px 10px 0;
 }
 
-/* REMOVE OR COMMENT OUT THE ROTATION */
-/*
-.sidebar-toggle:checked + .toggle-btn .toggle-icon {
-    transform: rotate(180deg);
-}
-*/
-
-/* Button Icons */
+/* Button icon styling */
 .btn-icon {
     font-size: 18px;
     margin-right: 8px;
     vertical-align: middle;
 }
 
-/* Route Items */
+/* Individual route item in list */
 .route-item {
     padding: 12px;
     margin: 10px 0;
@@ -133,18 +134,21 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
+/* Route item hover effect */
 .route-item:hover {
     background-color: #f0f7ff;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(33, 150, 243, 0.15);
 }
 
+/* Active (selected) route item */
 .route-item.active {
     background-color: #e3f2fd;
     border-color: #2196f3;
     box-shadow: 0 4px 12px rgba(33, 150, 243, 0.25);
 }
 
+/* Additional info below route name */
 .route-info {
     font-size: 0.9em;
     color: #666;
@@ -152,7 +156,7 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.4;
 }
 
-/* Form Elements */
+/* Search input field */
 .search-box {
     width: 100%;
     padding: 12px 15px;
@@ -164,17 +168,20 @@ h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
 }
 
+/* Search box when focused */
 .search-box:focus {
     border-color: #2196f3;
     outline: none;
     box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
 }
 
+/* Container for search with dropdown suggestions */
 .input-with-suggestions {
     position: relative;
     margin-bottom: 10px;
 }
 
+/* Dropdown suggestions list */
 .suggestions-list {
     position: absolute;
     top: 100%;
@@ -191,6 +198,7 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* Individual suggestion item */
 .suggestion-item {
     padding: 10px 15px;
     cursor: pointer;
@@ -199,15 +207,17 @@ h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
 }
 
+/* Suggestion item hover effect */
 .suggestion-item:hover {
     background-color: #f0f7ff;
 }
 
+/* Remove border from last suggestion */
 .suggestion-item:last-child {
     border-bottom: none;
 }
 
-/* Loading Indicator */
+/* Loading indicator */
 .loading {
     display: none;
     text-align: center;
@@ -219,7 +229,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
 }
 
-/* Control Buttons */
+/* Primary action buttons */
 .control-btn {
     padding: 12px 16px;
     margin: 5px;
@@ -238,37 +248,44 @@ h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
 }
 
+/* Button hover effect */
 .control-btn:hover {
     background: #1976d2;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
 }
 
+/* Secondary button variant */
 .control-btn.secondary {
     background: #6c757d;
 }
 
+/* Secondary button hover */
 .control-btn.secondary:hover {
     background: #5a6268;
 }
 
+/* Success (green) button variant */
 .control-btn.success {
     background: #28a745;
 }
 
+/* Success button hover */
 .control-btn.success:hover {
     background: #218838;
 }
 
+/* Warning (orange) button variant */
 .control-btn.warning {
     background: #ff9800;
 }
 
+/* Warning button hover */
 .control-btn.warning:hover {
     background: #f57c00;
 }
 
-/* Route Details */
+/* Route details display container */
 .route-details {
     margin-top: 10px;
     padding: 15px;
@@ -278,7 +295,7 @@ h1, h2, h3, h4, h5, h6 {
     border-left: 4px solid #4caf50;
 }
 
-/* Section Titles */
+/* Section headings */
 .section-title {
     font-size: 1.1em;
     margin: 15px 0 10px 0;
@@ -287,7 +304,7 @@ h1, h2, h3, h4, h5, h6 {
     padding-bottom: 8px;
 }
 
-/* Route Planner */
+/* Route planning form container */
 .route-planner {
     margin: 20px 0;
     padding: 20px;
@@ -296,7 +313,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid #cce7ff;
 }
 
-/* Location Buttons */
+/* Location button container */
 .location-buttons {
     display: flex;
     flex-direction: column;
@@ -304,6 +321,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 10px;
 }
 
+/* Location selection buttons */
 .location-btn {
     padding: 12px;
     border: none;
@@ -318,11 +336,12 @@ h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
 }
 
+/* Location button hover */
 .location-btn:hover {
     background: #bbdefb;
 }
 
-/* Route Options */
+/* Route options display container */
 .route-options {
     margin-top: 15px;
     padding: 15px;
@@ -331,6 +350,7 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
+/* Individual route option */
 .route-option {
     padding: 12px;
     margin: 8px 0;
@@ -341,32 +361,33 @@ h1, h2, h3, h4, h5, h6 {
     transition: all 0.2s;
 }
 
+/* Route option hover */
 .route-option:hover {
     background: #f0f9ff;
     border-color: #4dabf7;
 }
 
-/* Thinner Route Lines */
+/* Leaflet line styling */
 .leaflet-interactive {
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
-/* Make route lines thinner for better arrow visibility */
+/* Custom route line styling */
 .route-line {
-    weight: 3; /* Reduced from 6 */
+    weight: 3;
     opacity: 0.8;
     line-cap: round;
     line-join: round;
 }
 
-/* Direction markers */
+/* Direction arrow markers */
 .direction-marker {
     pointer-events: none;
     z-index: 650;
 }
 
-/* Transfer Route Styles */
+/* Transfer route styling */
 .transfer-route {
     background: #fff3e0;
     border-radius: 8px;
@@ -375,6 +396,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 2px dashed #ffb74d;
 }
 
+/* Route leg (segment) container */
 .route-leg {
     margin: 8px 0;
     background: white;
@@ -387,11 +409,13 @@ h1, h2, h3, h4, h5, h6 {
     padding: 12px;
 }
 
+/* Individual route step */
 .route-step {
     position: relative;
     padding: 5px 0;
 }
 
+/* Arrow icon in route steps */
 .arrow {
     margin-right: 7px;
     color: black;
@@ -400,10 +424,12 @@ h1, h2, h3, h4, h5, h6 {
     flex-shrink: 0;
 }
 
+/* Walk and jeep labels */
 .leg-walk, .leg-jeep {
     margin-left: 3px;
 }
 
+/* Transfer point styling */
 .transfer .step-content {
     background-color: #f7e1a1;
     padding: 6px 10px;
@@ -412,6 +438,7 @@ h1, h2, h3, h4, h5, h6 {
     display: inline-block;
 }
 
+/* Transfer point marker */
 .transfer-point {
     padding: 10px;
     margin: 8px 0;
@@ -423,11 +450,12 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Nearest Routes */
+/* Nearest routes list */
 .nearest-routes-list {
     margin-top: 10px;
 }
 
+/* Individual nearest route item */
 .nearest-route-item {
     padding: 15px;
     margin: 10px 0;
@@ -436,6 +464,7 @@ h1, h2, h3, h4, h5, h6 {
     background: #f8fdff;
 }
 
+/* Route header with name and distance */
 .route-header {
     display: flex;
     justify-content: space-between;
@@ -443,6 +472,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 8px;
 }
 
+/* Distance badge */
 .distance-badge {
     background: #2196f3;
     color: white;
@@ -452,10 +482,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 
-/* Responsive Design */
-/* Phone */
-/* Phone */
-/* Phone */
+/* Phone screens */
 @media (max-width: 768px) {
     body {
         font-size: 16px;
@@ -470,7 +497,7 @@ h1, h2, h3, h4, h5, h6 {
         z-index: 1;
     }
 
-    /* UPDATED: Mobile sidebar - bottom up, full width, 40% height */
+    /* Mobile sidebar - slides up from bottom */
     .sidebar {
         position: fixed;
         top: auto;
@@ -478,31 +505,34 @@ h1, h2, h3, h4, h5, h6 {
         left: 0;
         right: 0;
         width: 100%;
-        height: 40vh; /* Fixed height of 40% of viewport */
-        max-height: 40vh; /* Ensure it doesn't exceed 40% */
+        height: 40vh;
+        max-height: 40vh;
         border-radius: 20px 20px 0 0;
         padding: 15px;
-        transform: translateY(100%); /* Start hidden below screen */
+        transform: translateY(100%);
         transition: transform 0.3s ease;
         z-index: 1000;
         background: white;
         box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-        overflow-y: auto; /* Allow scrolling if content exceeds height */
+        overflow-y: auto;
     }
 
+    /* Sidebar when expanded (visible) */
     .sidebar.expanded {
-        transform: translateY(0); /* Slide up to show */
+        transform: translateY(0);
     }
 
+    /* Sidebar when collapsed (hidden) */
     .sidebar.collapsed {
-        transform: translateY(100%); /* Hide below screen */
+        transform: translateY(100%);
     }
 
+    /* Show sidebar when checkbox checked */
     .sidebar-toggle:checked ~ .sidebar {
         transform: translateY(0);
     }
 
-    /* UPDATED: Floating action button for mobile */
+    /* Mobile toggle button */
     .toggle-btn {
         position: fixed;
         bottom: 20px;
@@ -524,48 +554,49 @@ h1, h2, h3, h4, h5, h6 {
         transition: all 0.3s ease;
     }
 
+    /* Mobile button hover */
     .toggle-btn:hover {
         background: #1976d2;
         transform: translateX(-50%) scale(1.05);
     }
 
+    /* Mobile toggle icon */
     .toggle-icon {
         font-size: 24px;
         margin-right: 8px;
     }
 
+    /* Button text */
     .toggle-btn::after {
         content: "Show Routes";
         font-size: 14px;
         font-weight: 600;
     }
 
+    /* Button when sidebar expanded */
     .sidebar.expanded + .toggle-btn {
-        bottom: calc(40vh + 10px); /* Position above the expanded sidebar */
+        bottom: calc(40vh + 10px);
         background: #dc3545;
     }
 
+    /* Button when checkbox checked */
     .sidebar-toggle:checked + .toggle-btn {
         bottom: calc(40vh + 10px);
         transform: translateX(-50%);
         background: #dc3545;
     }
 
+    /* Checked button hover */
     .sidebar-toggle:checked + .toggle-btn:hover {
         background: #c82333;
     }
 
+    /* Button text when checked */
     .sidebar-toggle:checked + .toggle-btn::after {
         content: "Hide Routes";
     }
 
-    /* REMOVE OR COMMENT OUT THIS ROTATION FOR MOBILE */
-    /*
-    .sidebar-toggle:checked + .toggle-btn .toggle-icon {
-        transform: rotate(180deg);
-    }
-    */
-
+    /* Mobile search box */
     .search-box {
         padding: 12px;
         margin-bottom: 10px;
@@ -573,6 +604,7 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 16px;
     }
 
+    /* Mobile buttons */
     .control-btn {
         padding: 12px 16px;
         font-size: 14px;
@@ -580,35 +612,39 @@ h1, h2, h3, h4, h5, h6 {
         width: 100%;
     }
 
+    /* Mobile location buttons */
     .location-buttons {
         flex-direction: column;
         gap: 8px;
     }
 
+    /* Mobile location button */
     .location-btn {
         width: 100%;
         padding: 12px;
     }
 
+    /* Mobile route item */
     .route-item {
         padding: 12px;
         margin: 8px 0;
     }
 
+    /* Mobile route options */
     .route-options {
         padding: 12px;
         margin-top: 10px;
     }
 }
 
-/* Tablet */
+/* Tablet screens */
 @media (min-width: 769px) and (max-width: 1024px) {
     .sidebar {
         width: 350px;
     }
     
     .toggle-btn {
-        right: 360px; /* Adjusted for tablet sidebar width */
+        right: 360px;
     }
     
     .sidebar-toggle:checked + .toggle-btn {
@@ -616,19 +652,19 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* Landscape */
+/* Mobile landscape orientation */
 @media (max-width: 768px) and (orientation: landscape) {
     #map {
         height: 100vh;
     }
     
     .sidebar {
-        height: 60vh; /* Slightly taller in landscape */
+        height: 60vh;
         max-height: 60vh;
     }
 
     .toggle-btn {
-        bottom: calc(60vh + 10px); /* Adjust button position for landscape */
+        bottom: calc(60vh + 10px);
     }
     
     .sidebar.expanded {
@@ -636,12 +672,12 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* City Boundary Styling */
+/* City boundary overlay */
 .city-boundary {
     pointer-events: none;
 }
 
-/* Make sure map controls are visible */
+/* Ensure map controls are on top */
 .leaflet-control-zoom {
     z-index: 1000;
 }
@@ -650,7 +686,7 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1000;
 }
 
-/* Move route details above available routes */
+/* Route details ordering */
 #route-details {
     order: 1;
     margin-bottom: 20px;
@@ -660,12 +696,13 @@ h1, h2, h3, h4, h5, h6 {
     order: 2;
 }
 
+/* Sidebar flex layout */
 .sidebar {
     display: flex;
     flex-direction: column;
 }
 
-/* Clean transfer route styling */
+/* Clean transfer route style */
 .transfer-route-clean {
     background: #f8f9fa;
     border-radius: 8px;
@@ -674,6 +711,7 @@ h1, h2, h3, h4, h5, h6 {
     border-left: 4px solid #ff9800;
 }
 
+/* Clean transfer leg */
 .transfer-leg {
     margin: 10px 0;
     padding: 10px;
@@ -682,6 +720,7 @@ h1, h2, h3, h4, h5, h6 {
     border-left: 3px solid #4caf50;
 }
 
+/* Clean transfer point */
 .transfer-point-clean {
     padding: 10px;
     margin: 10px 0;
@@ -692,6 +731,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 
+/* Clean fare breakdown */
 .fare-breakdown-clean {
     background: #e8f5e8;
     border-radius: 6px;
@@ -700,7 +740,7 @@ h1, h2, h3, h4, h5, h6 {
     border-left: 3px solid #4caf50;
 }
 
-/* Clean route option styling */
+/* Clean route option */
 .route-option-clean {
     padding: 12px;
     margin: 8px 0;
@@ -711,11 +751,13 @@ h1, h2, h3, h4, h5, h6 {
     transition: all 0.2s;
 }
 
+/* Clean option hover */
 .route-option-clean:hover {
     background: #f0f9ff;
     border-color: #4dabf7;
 }
 
+/* Clean route leg */
 .route-leg-clean {
     margin: 8px 0;
     background: white;
@@ -726,6 +768,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px;
 }
 
+/* Clean route step */
 .route-step-clean {
     display: flex;
     align-items: center;
@@ -733,12 +776,14 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 13px;
 }
 
+/* Clean arrow */
 .arrow-clean {
     margin-right: 8px;
     color: #666;
     font-weight: bold;
 }
 
+/* Step type label */
 .step-type {
     display: inline-block;
     width: 80px;
@@ -746,10 +791,12 @@ h1, h2, h3, h4, h5, h6 {
     color: #333;
 }
 
+/* Step details */
 .step-detail {
     color: #666;
 }
 
+/* Confidence indicator circle */
 .confidence-badge-clean {
     display: inline-block;
     width: 12px;
@@ -758,11 +805,16 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 8px;
 }
 
+/* High confidence (green) */
 .confidence-high { background: #28a745; }
+
+/* Medium confidence (yellow) */
 .confidence-medium { background: #ffc107; }
+
+/* Low confidence (red) */
 .confidence-low { background: #dc3545; }
 
-/* Remove emojis from route options */
+/* Route summary */
 .route-summary-clean {
     margin-top: 8px;
     padding-top: 8px;
@@ -771,37 +823,40 @@ h1, h2, h3, h4, h5, h6 {
     color: #333;
 }
 
-/* Enhanced Landmark Markers - Bigger sizes */
+/* Primary landmark marker (star) */
 .primary-landmark-marker {
-    font-size: 45px; /* Increased from 35px */
+    font-size: 45px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.8));
     z-index: 1000;
 }
 
+/* Secondary landmark marker (pin) */
 .secondary-landmark-marker {
-    font-size: 35px; /* Increased from 25px */
+    font-size: 35px;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     filter: drop-shadow(0 0 4px rgba(52, 152, 219, 0.6));
     opacity: 0.8;
     z-index: 500;
 }
 
+/* Transfer point marker */
 .transfer-point-marker {
-    font-size: 40px; /* Increased from 30px */
+    font-size: 40px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.8));
     z-index: 1000;
 }
 
+/* Custom destination marker */
 .custom-destination-marker {
-    font-size: 40px; /* Increased from 30px */
+    font-size: 40px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
     z-index: 1000;
 }
 
-/* Consistent button styling */
+/* Consistent button base */
 .control-btn {
     display: flex;
     align-items: center;
@@ -818,56 +873,63 @@ h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
 }
 
+/* Success button */
 .control-btn.success {
     background: #28a745;
     color: white;
 }
 
+/* Success button hover */
 .control-btn.success:hover {
     background: #218838;
 }
 
+/* Secondary button */
 .control-btn.secondary {
     background: #6c757d;
     color: white;
 }
 
+/* Secondary button hover */
 .control-btn.secondary:hover {
     background: #5a6268;
 }
 
-/* Button container for side-by-side layout */
+/* Button group container */
 .button-group {
     display: flex;
     gap: 10px;
     margin-top: 15px;
 }
 
+/* Equal width buttons in group */
 .button-group .control-btn {
     flex: 1;
 }
 
-/* Ensure route details appears above available routes */
+/* Sidebar vertical layout */
 .sidebar {
     display: flex;
     flex-direction: column;
 }
 
+/* Route details order */
 #route-details {
     order: 1;
     margin-bottom: 20px;
 }
 
+/* Routes list order */
 #routes-list {
     order: 2;
 }
 
-/* Remove clear routes button from route details */
+/* Hide clear button in route details */
 .route-details .control-btn[style*="background: #dc3545"] {
     display: none;
 }
 
-/* Consistent star marker sizing */
+/* Ensure consistent star marker */
 .primary-landmark-marker {
     font-size: 45px !important;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7) !important;
@@ -875,31 +937,35 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1000 !important;
 }
 
-/* Ensure proper sidebar layout */
+/* Sidebar with spacing */
 .sidebar {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+/* Available routes section order */
 .available-routes-section {
     order: 3;
     margin-top: 20px;
 }
 
+/* Route details order */
 #route-details {
     order: 2;
 }
 
+/* Route planner order */
 .route-planner {
     order: 1;
 }
 
+/* Loading indicator order */
 .loading {
     order: 1.5;
 }
 
-/* Button styling consistency */
+/* Consistent location button */
 .location-btn {
     padding: 12px;
     border: none;
@@ -916,15 +982,18 @@ h1, h2, h3, h4, h5, h6 {
     text-align: left;
 }
 
+/* Location button hover */
 .location-btn:hover {
     background: #bbdefb;
 }
 
+/* Disabled location button */
 .location-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
+/* Button icon */
 .btn-icon {
     font-size: 18px;
     margin-right: 8px;
@@ -932,37 +1001,42 @@ h1, h2, h3, h4, h5, h6 {
     flex-shrink: 0;
 }
 
-/* Fix Available Routes layout */
+/* Available routes at bottom */
 .available-routes-container {
-    margin-top: auto; /* Push to bottom */
+    margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #e1e5e9;
 }
 
+/* Full height sidebar */
 .sidebar {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
+/* Prevent shrinking */
 .route-planner {
     flex-shrink: 0;
 }
 
+/* Prevent shrinking */
 #route-details {
     flex-shrink: 0;
 }
 
+/* Prevent shrinking */
 .loading {
     flex-shrink: 0;
 }
 
+/* Scrollable routes list */
 #routes-list {
     max-height: 300px;
     overflow-y: auto;
 }
 
-/* Custom marker styles */
+/* Custom start marker */
 .custom-start-marker {
     font-size: 30px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
@@ -970,6 +1044,7 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1000;
 }
 
+/* Custom destination marker */
 .custom-destination-marker {
     font-size: 30px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
@@ -977,39 +1052,44 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1000;
 }
 
-/* Button states */
+/* Active location button */
 .location-btn.active {
     background: #ff9800;
     color: white;
     font-weight: bold;
 }
 
+/* Active button hover */
 .location-btn.active:hover {
     background: #f57c00;
 }
 
-/* Fix sidebar layout order */
+/* Sidebar layout order */
 .sidebar {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
+/* Route planner order */
 .route-planner {
     order: 1;
     flex-shrink: 0;
 }
 
+/* Loading order */
 .loading {
     order: 2;
     flex-shrink: 0;
 }
 
+/* Route details order */
 #route-details {
     order: 3;
     flex-shrink: 0;
 }
 
+/* Available routes order */
 .available-routes-container {
     order: 4;
     margin-top: 20px;
@@ -1017,12 +1097,13 @@ h1, h2, h3, h4, h5, h6 {
     border-top: 1px solid #e1e5e9;
 }
 
+/* Scrollable routes list */
 #routes-list {
     max-height: 300px;
     overflow-y: auto;
 }
 
-/* Custom marker styles */
+/* Custom start marker */
 .custom-start-marker {
     font-size: 30px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
@@ -1030,6 +1111,7 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1000;
 }
 
+/* Custom destination marker */
 .custom-destination-marker {
     font-size: 30px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
@@ -1055,12 +1137,14 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 8px;
 }
 
+/* Location button hover with lift */
 .location-btn:hover {
     background: #bbdefb;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
 }
 
+/* Disabled location button */
 .location-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -1068,12 +1152,14 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: none;
 }
 
+/* Disabled button hover */
 .location-btn:disabled:hover {
     background: #e3f2fd;
     transform: none;
     box-shadow: none;
 }
 
+/* Button icon */
 .btn-icon {
     font-size: 18px;
     margin-right: 8px;
@@ -1081,7 +1167,7 @@ h1, h2, h3, h4, h5, h6 {
     flex-shrink: 0;
 }
 
-/* Current location marker styling */
+/* Current location marker */
 .current-location-marker {
     font-size: 30px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
@@ -1089,7 +1175,7 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1000;
 }
 
-/* Improved Sidebar Styles */
+/* Improved sidebar padding */
 .sidebar {
     position: absolute;
     top: 10px;
@@ -1103,75 +1189,76 @@ h1, h2, h3, h4, h5, h6 {
     max-height: 95vh;
     overflow-y: auto;
     transition: transform 0.3s ease;
-    /* Add top padding to match bottom */
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
-/* Reduce space between title and route planner */
+/* Sidebar title spacing */
 .sidebar h3 {
     margin-top: 0;
-    margin-bottom: 15px; /* Reduced from default */
+    margin-bottom: 15px;
     color: #2c3e50;
 }
 
-/* Reduce space between route planner and available routes */
+/* Route planner spacing */
 .route-planner {
-    margin: 0 0 15px 0; /* Reduced from 20px 0 */
-    padding: 15px; /* Slightly reduced padding */
+    margin: 0 0 15px 0;
+    padding: 15px;
     background: #f0f8ff;
     border-radius: 8px;
     border: 1px solid #cce7ff;
 }
 
-/* Reduce space between sections */
+/* Section title spacing */
 .section-title {
     font-size: 1.1em;
-    margin: 10px 0 8px 0; /* Reduced margins */
+    margin: 10px 0 8px 0;
     color: #333;
     border-bottom: 1px solid #eee;
-    padding-bottom: 6px; /* Reduced padding */
+    padding-bottom: 6px;
 }
 
-/* Adjust available routes container */
+/* Available routes spacing */
 .available-routes-container {
-    margin-top: 15px; /* Reduced from 20px */
-    padding-top: 15px; /* Reduced from 20px */
+    margin-top: 15px;
+    padding-top: 15px;
     border-top: 1px solid #e1e5e9;
 }
 
-/* Fix scrollbar positioning */
+/* Routes list scrollbar */
 #routes-list {
     max-height: 300px;
     overflow-y: auto;
-    /* Remove extra right padding */
     padding-right: 5px;
-    margin-right: -5px; /* Pull content slightly to the right */
+    margin-right: -5px;
 }
 
-/* Custom scrollbar styling to use more space */
+/* Custom scrollbar */
 #routes-list::-webkit-scrollbar {
     width: 8px;
 }
 
+/* Scrollbar track */
 #routes-list::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 4px;
 }
 
+/* Scrollbar thumb */
 #routes-list::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 4px;
 }
 
+/* Scrollbar thumb hover */
 #routes-list::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
 
-/* Reduce space in route items */
+/* Compact route items */
 .route-item {
-    padding: 10px; /* Reduced from 12px */
-    margin: 8px 0; /* Reduced from 10px 0 */
+    padding: 10px;
+    margin: 8px 0;
     border: 1px solid #e1e5e9;
     border-radius: 8px;
     cursor: pointer;
@@ -1180,11 +1267,11 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* Adjust route info spacing */
+/* Compact route info */
 .route-info {
     font-size: 0.9em;
     color: #666;
-    margin-top: 6px; /* Reduced from 8px */
+    margin-top: 6px;
     line-height: 1.4;
 }
 
@@ -1207,8 +1294,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-
-/* Phone */
+/* Phone screens (alternative layout) */
 @media (max-width: 768px) {
     body {
         font-size: 16px;
@@ -1223,19 +1309,19 @@ h1, h2, h3, h4, h5, h6 {
         z-index: 1;
     }
 
-    /* UPDATED: Mobile sidebar - bottom up, full width, 70% height */
+    /* Mobile sidebar - taller version */
     .sidebar {
         position: fixed;
-        top: 30vh; /* Start 30% from top */
-        bottom: 0; /* Fill all the way to bottom */
+        top: 30vh;
+        bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
-        height: 70vh; /* Fixed height of 70% of viewport */
-        max-height: 70vh; /* Ensure it doesn't exceed 70% */
+        height: 70vh;
+        max-height: 70vh;
         border-radius: 20px 20px 0 0;
         padding: 15px;
-        transform: translateY(100%); /* Start hidden below screen */
+        transform: translateY(100%);
         transition: transform 0.3s ease;
         z-index: 1000;
         background: white;
@@ -1243,69 +1329,77 @@ h1, h2, h3, h4, h5, h6 {
         overflow-y: auto;
     }
 
+    /* Expanded sidebar */
     .sidebar.expanded {
-        transform: translateY(0); /* Slide up to show */
+        transform: translateY(0);
     }
 
+    /* Collapsed sidebar */
     .sidebar.collapsed {
-        transform: translateY(100%); /* Hide below screen */
+        transform: translateY(100%);
     }
 
+    /* Show when checkbox checked */
     .sidebar-toggle:checked ~ .sidebar {
         transform: translateY(0);
     }
 
-    /* UPDATED: Toggle button moved to upper right */
-/* UPDATED: Toggle button moved to upper right */
-.toggle-btn {
-    position: fixed !important;
-    top: 20px !important;
-    right: 10px !important;
-    left: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    background: #2196f3;
-    color: white;
-    border-radius: 50px;
-    width: 140px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 20px rgba(33, 150, 243, 0.4);
-    z-index: 1001;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
+    /* Toggle button in top right */
+    .toggle-btn {
+        position: fixed !important;
+        top: 20px !important;
+        right: 10px !important;
+        left: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        background: #2196f3;
+        color: white;
+        border-radius: 50px;
+        width: 140px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(33, 150, 243, 0.4);
+        z-index: 1001;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
 
-.toggle-btn:hover {
-    background: #1976d2;
-    transform: scale(1.05) !important;
-}
+    /* Button hover */
+    .toggle-btn:hover {
+        background: #1976d2;
+        transform: scale(1.05) !important;
+    }
 
-.sidebar.expanded + .toggle-btn {
-    top: 20px !important;
-    right: 10px !important;
-    background: #dc3545;
-}
+    /* Button when sidebar expanded */
+    .sidebar.expanded + .toggle-btn {
+        top: 20px !important;
+        right: 10px !important;
+        background: #dc3545;
+    }
 
-.sidebar-toggle:checked + .toggle-btn {
-    top: 20px !important;
-    right: 10px !important;
-    transform: none !important;
-    background: #dc3545;
-}
+    /* Button when checkbox checked */
+    .sidebar-toggle:checked + .toggle-btn {
+        top: 20px !important;
+        right: 10px !important;
+        transform: none !important;
+        background: #dc3545;
+    }
 
+    /* Checked button hover */
     .sidebar-toggle:checked + .toggle-btn:hover {
         background: #c82333;
     }
 
+    /* Button text when checked */
     .sidebar-toggle:checked + .toggle-btn::after {
         content: "Hide Routes";
     }
 
+    /* Mobile search */
     .search-box {
         padding: 12px;
         margin-bottom: 10px;
@@ -1313,6 +1407,7 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 16px;
     }
 
+    /* Mobile buttons */
     .control-btn {
         padding: 12px 16px;
         font-size: 14px;
@@ -1320,75 +1415,84 @@ h1, h2, h3, h4, h5, h6 {
         width: 100%;
     }
 
+    /* Mobile location buttons */
     .location-buttons {
         flex-direction: column;
         gap: 8px;
     }
 
+    /* Mobile location button */
     .location-btn {
         width: 100%;
         padding: 12px;
     }
 
+    /* Mobile route item */
     .route-item {
         padding: 12px;
         margin: 8px 0;
     }
 
+    /* Mobile route options */
     .route-options {
         padding: 12px;
         margin-top: 10px;
     }
 }
 
-/* Landscape */
+/* Mobile landscape */
 @media (max-width: 768px) and (orientation: landscape) {
     #map {
         height: 100vh;
     }
     
     .sidebar {
-        height: 80vh; /* Taller in landscape */
+        height: 80vh;
         max-height: 80vh;
-        top: 20vh; /* Less space at top in landscape */
+        top: 20vh;
     }
 
     .toggle-btn {
-        top: 10px; /* Adjust for landscape */
+        top: 10px;
         right: 10px;
     }
 }
 
-/* Fix Available Routes layout */
+/* Available routes at bottom */
 .available-routes-container {
-    margin-top: auto; /* Push to bottom */
+    margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #e1e5e9;
-    order: 4; /* Ensure it comes after route details */
+    order: 4;
 }
 
+/* Full height sidebar */
 .sidebar {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
+/* Prevent shrinking */
 .route-planner {
     flex-shrink: 0;
 }
 
+/* Prevent shrinking */
 #route-details {
     flex-shrink: 0;
 }
 
+/* Prevent shrinking */
 .loading {
     flex-shrink: 0;
 }
 
+/* Larger routes list */
 #routes-list {
-    max-height: 400px; /* CHANGED: Increased from 300px to 400px */
+    max-height: 400px;
     overflow-y: auto;
-    margin-top: 10px; /* CHANGED: Added space below "Available Routes" text */
+    margin-top: 10px;
 }
 
 /* Mobile adjustments */
@@ -1399,7 +1503,7 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     #routes-list {
-        max-height: 300px; /* CHANGED: Increased for mobile too */
-        margin-top: 8px; /* CHANGED: Space below text on mobile */
+        max-height: 300px;
+        margin-top: 8px;
     }
 }

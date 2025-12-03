@@ -710,6 +710,35 @@ class BatangasJeepneySystem {
         routeManager.clearAllRoutesSilently();
         this.map.setView([13.7565, 121.0583], 15);
         
+        // Reset the sidebar layout properly
+        const sidebar = document.getElementById('sidebar');
+        const routePlanner = document.querySelector('.route-planner');
+        const loading = document.getElementById('loading');
+        const routeDetails = document.getElementById('route-details');
+        const availableRoutesContainer = document.querySelector('.available-routes-container');
+        const routesList = document.getElementById('routes-list');
+        
+        if (sidebar && routePlanner && loading && routeDetails && availableRoutesContainer && routesList) {
+            sidebar.innerHTML = '';
+            
+            const title = document.createElement('h3');
+            title.style.marginTop = '0';
+            title.style.color = '#2c3e50';
+            title.textContent = 'Batangas City Jeepney Routes';
+            sidebar.appendChild(title);
+            
+            sidebar.appendChild(routePlanner);
+            sidebar.appendChild(loading);
+            sidebar.appendChild(routeDetails);
+            sidebar.appendChild(availableRoutesContainer);
+            
+            availableRoutesContainer.appendChild(routesList);
+            
+            routeDetails.style.display = 'none';
+        }
+        
+        this.populateRoutesList();
+        
         this.showNotification('🗑️ Cleared!', 'info');
     }
 
@@ -1602,6 +1631,13 @@ class RouteManager {
         });
         
         console.log('All routes cleared silently');
+        
+        const routesList = document.getElementById('routes-list');
+        const availableRoutesContainer = document.querySelector('.available-routes-container');
+        
+        if (routesList && availableRoutesContainer && routesList.parentNode !== availableRoutesContainer) {
+            availableRoutesContainer.appendChild(routesList);
+        }
     }
     
     async showAllRoutes() {
@@ -1755,14 +1791,17 @@ class RouteManager {
     ensureProperLayout() {
         const detailsDiv = document.getElementById('route-details');
         const routesList = document.getElementById('routes-list');
+        const availableRoutesContainer = document.querySelector('.available-routes-container');
         const sidebar = document.getElementById('sidebar');
         
-        if (detailsDiv && routesList && sidebar) {
-            if (detailsDiv.parentNode === sidebar) sidebar.removeChild(detailsDiv);
-            if (routesList.parentNode === sidebar) sidebar.removeChild(routesList);
-            
-            sidebar.appendChild(detailsDiv);
-            sidebar.appendChild(routesList);
+        if (!sidebar || !availableRoutesContainer) return;
+        
+        if (routesList && routesList.parentNode !== availableRoutesContainer) {
+            availableRoutesContainer.appendChild(routesList);
+        }
+        
+        if (detailsDiv && detailsDiv.parentNode === sidebar) {
+            sidebar.insertBefore(detailsDiv, availableRoutesContainer);
         }
     }
 }

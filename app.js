@@ -1023,7 +1023,7 @@ class BatangasJeepneySystem {
     }
 
     getTransportRecommendation(distance) {
-        if (distance <= 300) {
+        if (distance <= 500) {
             return {
                 type: 'walk',
                 message: `🚶‍♂️ Walk ${Math.round(distance)}m to jeepney route`,

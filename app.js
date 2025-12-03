@@ -1131,17 +1131,16 @@ class BatangasJeepneySystem {
             }
         }, 3000);
     }
-    // ============================================
+
+// ============================================
 // DISCOUNT HANDLING METHODS
 // ============================================
 
-// NEW: Get current discount percentage (20% if enabled)
 getCurrentDiscount() {
     const discountEnabled = document.getElementById('discountToggle')?.checked;
     return discountEnabled ? 0.20 : 0; // 20% discount
 }
 
-// NEW: Apply 20% discount to fare string with proper rounding
 applyDiscountToFare(fareStr) {
     const discountRate = this.getCurrentDiscount();
     if (!fareStr || discountRate === 0) return fareStr;
@@ -1149,27 +1148,22 @@ applyDiscountToFare(fareStr) {
     const nums = fareStr.match(/(\d+)/g);
     if (!nums) return fareStr;
 
-    // Helper function for rounding
     const roundDown = (num) => Math.floor(num); // For minimum fares
     const roundUp = (num) => Math.ceil(num);    // For maximum fares
 
     if (nums.length === 1) {
-        // Single fare (e.g., ₱13)
         const originalFare = parseInt(nums[0], 10);
         const discountAmount = originalFare * discountRate;
         const discountedFare = Math.max(originalFare - discountAmount, 11);
         
-        // Round normally for single fares
         return `₱${Math.round(discountedFare)}`;
     } else {
-        // Fare range (e.g., ₱13-18)
         const minOriginal = parseInt(nums[0], 10);
         const maxOriginal = parseInt(nums[1], 10);
         
         const minDiscount = minOriginal * discountRate;
         const maxDiscount = maxOriginal * discountRate;
         
-        // Minimum: round down (normal rounding), Maximum: round up
         const minDiscounted = Math.max(roundDown(minOriginal - minDiscount), 11);
         const maxDiscounted = Math.max(roundUp(maxOriginal - maxDiscount), 11);
         

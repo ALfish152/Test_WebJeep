@@ -950,7 +950,7 @@ class BatangasJeepneySystem {
     formatFare(fareStr) {
         return this.applyDiscountToFare(fareStr);
     }
-
+    //Harvesine Formula
     calculateDistance(coord1, coord2) {
         const R = 6371000;
         const lat1 = coord1[0] * Math.PI / 180;
@@ -2054,6 +2054,7 @@ class RoutePlanner {
         return 'low';
     }
 
+    // Transfer route logic
     findTransferOptions(startCoords, endCoords) {
         const transferOptions = [];
         const allRoutes = Object.entries(jeepneyRoutes);
